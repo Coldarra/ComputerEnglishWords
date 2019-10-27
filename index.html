@@ -5619,6 +5619,7 @@
         methods: {
             submit() { },
             next_word() {
+                const original_index = this.index;
                 this.spell_success = false;
                 if (this.show_collection) {
                     var collection_index = this.Contains(this.collection, this.index);
@@ -5634,7 +5635,8 @@
                     else
                         this.index = (this.index + 1) % glossary.length;
                 }
-                this.index = this.index || 0;
+                if (!(this.index >= 0))
+                    this.index = original_index;
                 if (this.show_spell) {
                     var it = document.getElementById("input");
                     it.click();
@@ -5697,7 +5699,7 @@
                 localStorage.setItem("index", this.index);
             },
             collection() {
-                console.log(this.collection);
+                // console.log(this.collection);
                 localStorage.setItem("collection", JSON.stringify(this.collection))
             }
         },
