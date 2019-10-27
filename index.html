@@ -103,9 +103,26 @@
                 </v-tooltip>
             </div>
             <v-content id="content">
-                <div class="ce" style="margin-top:1.5rem;"><span class="ce_title">计算机英语</span>
+                <div class="ce" style="margin-top:2.5rem;"><span class="ce_title">
+                        <div>
+                            <div v-show="!show_spell" class="">
+                                {{glossary[index].word}}
+                            </div>
+                            <div v-show="show_spell" style="margin-left:10%;margin-right:10%;">
+                                <v-text-field id="input" type="text" v-model="spell" label="拼写" :success="spell_success">
+                            </div>
+
+                        </div>
+                    </span>
                 </div>
                 <div style="margin-top:0.5rem;" class="ce_subtitle">词汇表 第{{index+1}}个 教材第{{glossary[index].page}}页
+                    <v-btn
+                        icon v-if="Contains(collection,index)>=0" style="color:gold" @click="uncollect_word">
+                        <v-icon>mdi-star</v-icon>
+                    </v-btn>
+                    <v-btn icon v-else @click="collect_word">
+                        <v-icon>mdi-star</v-icon>
+                    </v-btn>
                 </div>
                 <div class="ce_subtitle">
                     <v-btn color="purple lighten-2" text @click="show_spell = !show_spell">{{show_spell?"拼写模式":"背词模式"}}
@@ -122,23 +139,7 @@
                     <v-btn color="#6539D6" outlined @click="show_context_EN = !show_context_EN">英文解释</v-btn>
                 </div> -->
                 <div style="margin-top:0.5rem;margin-left:10%;margin-right:10%;">
-                    <div>
-                        <div v-show="!show_spell" class="headline">
-                            {{glossary[index].word}}
-                            <v-btn icon v-if="Contains(collection,index)>=0" style="color:gold" @click="uncollect_word">
-                                <v-icon>mdi-star</v-icon>
-                            </v-btn>
-                            <v-btn icon v-else @click="collect_word">
-                                <v-icon>mdi-star</v-icon>
-                            </v-btn>
 
-                        </div>
-
-                        <div v-show="show_spell">
-                            <v-text-field id="input" type="text" v-model="spell" label="拼写" :success="spell_success">
-                        </div>
-
-                    </div>
 
 
                     <v-expansion-panels accordion multiple v-model="panel" style="margin-top:0.5rem">
