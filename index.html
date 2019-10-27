@@ -50,14 +50,14 @@
 
         .toll_left {
             position: fixed;
-            left: 4%;
+            left: 2%;
             bottom: 10%;
             z-index: 10;
         }
 
         .toll_right {
             position: fixed;
-            right: 4%;
+            right: 2%;
             bottom: 10%;
             z-index: 10;
         }
@@ -78,12 +78,12 @@
     <v-app id="app">
         <div>
             <div class="toll_left">
-                <v-btn class="mx-2" fab dark color="blue lighten-3" @click="last_word">
+                <v-btn class="mx-2" fab dark color="light-blue lighten-2" @click="last_word">
                     上一个
                 </v-btn>
             </div>
             <div class="toll_right">
-                <v-btn class="mx-2" fab dark color="blue lighten-1" @click="next_word">
+                <v-btn class="mx-2" fab dark color="light-blue lighten-2" @click="next_word">
                     下一个
                 </v-btn>
             </div>
@@ -194,7 +194,7 @@
             "word_CN": "二元",
             "page": 19,
             "context": "The representation of data using two states, such as off-on or 1-0.",
-            "context_CN": "使用两种状态（例如，关闭或1-0）表示数据。"
+            "context_CN": "使用两种状态表示数据（例如，关-开或1-0）。"
         },
         {
             "word": "data",
@@ -1178,14 +1178,14 @@
         },
         {
             "word": "form factor",
-            "word_CN": "构成因素",
+            "word_CN": "外形",
             "page": 89,
             "context": "The configuration of a computer's system unit; examples include tower, mini-tower, and cube.",
             "context_CN": "计算机系统单元的配置；示例包括塔式，小型塔式和立方体式。"
         },
         {
             "word": "system unit",
-            "word_CN": "系统单位",
+            "word_CN": "系统单元",
             "page": 89,
             "context": "The case or box that contains the computer's power supply, storage devices, main circuit board, processor, and memory.",
             "context_CN": "包含计算机电源，存储设备，主电路板，处理器和内存的机箱或盒子。"
@@ -1234,10 +1234,10 @@
         },
         {
             "word": "Chromebook",
-            "word_CN": "的Chromebook",
+            "word_CN": "Chromebook",
             "page": 96,
             "context": "A clamshellstyle laptop computer that uses Chrome OS as an operating system and a thin client for Web access.",
-            "context_CN": "蛤壳式笔记本电脑，使用Chrome操作系统作为操作系统，并使用瘦客户端进行Web访问。"
+            "context_CN": "使用ChromeOS作为操作系统，瘦客户端进行Web访问的翻盖式笔记本电脑。"
         },
         {
             "word": "desktop computer",
@@ -1283,7 +1283,7 @@
         },
         {
             "word": "slate tablet",
-            "word_CN": "平板电脑",
+            "word_CN": "平板",
             "page": 97,
             "context": "A computer form factor in which the screen covers most of the system unit and there is no physical keyboard.",
             "context_CN": "一种计算机外形尺寸，其中屏幕覆盖了大部分系统单元，并且没有物理键盘。"
@@ -1325,7 +1325,7 @@
         },
         {
             "word": "ARM",
-            "word_CN": "臂",
+            "word_CN": "ARM",
             "page": 105,
             "context": "A RISC-based instruction set used as the basis for microprocessors in tablet computers and smartphones.",
             "context_CN": "基于RISC的指令集，用作平板电脑和智能手机中微处理器的基础。"
@@ -1353,7 +1353,7 @@
         },
         {
             "word": "programming language",
-            "word_CN": "程式语言",
+            "word_CN": "编程语言",
             "page": 107,
             "context": "A set of keywords and grammar (syntax) that allows a programmer to write instructions that a computer can execute.",
             "context_CN": "一组关键字和语法（语法），使程序员可以编写计算机可以执行的指令。"
@@ -1374,7 +1374,7 @@
         },
         {
             "word": "instruction cycle",
-            "word_CN": "教学周期",
+            "word_CN": "指令周期",
             "page": 108,
             "context": "The steps followed by a computer to process a single instruction: fetch, interpret, execute, and then increment the instruction pointer.",
             "context_CN": "计算机处理单个指令所遵循的步骤：获取，解释，执行然后递增指令指针。"
@@ -1397,8 +1397,8 @@
             "word": "gigahertz",
             "word_CN": "吉赫兹",
             "page": 110,
-            "context": "(gHz) A measure of frequency equivalent to",
-            "context_CN": "（gHz）等效于"
+            "context": "(gHz) A measure of frequency equivalent to 1 billion cycles per second.",
+            "context_CN": "（gHz）相当于每秒10亿个周期的频率度量。"
         },
         {
             "word": "microprocessor clock",
@@ -1468,11 +1468,11 @@
             "word_CN": "电容器",
             "page": 113,
             "context": "Electronic circuit components that store an electrical charge; in RAM, a charged capacitor represents an \"on\" bit, and a discharged one represents an \"off\" bit.",
-            "context_CN": "存储电荷的电子电路组件；在RAM中，一个充电的电容器代表一个“开”位，而一个放电的电容器代表一个“关”位。"
+            "context_CN": "存储电荷的电子电路组件；在内存中，一个充电的电容器代表一个“开”位，而一个放电的电容器代表一个“关”位。"
         },
         {
             "word": "dynamic RAM",
-            "word_CN": "动态RAM",
+            "word_CN": "动态内存",
             "page": 113,
             "context": "(DRAM) Random access memory that requires a power source to hold data; used as main memory on most computers.",
             "context_CN": "（DRAM）随机存取存储器，需要电源来保存数据；在大多数计算机上用作主内存。"
@@ -1486,10 +1486,10 @@
         },
         {
             "word": "volatile",
-            "word_CN": "易挥发的",
+            "word_CN": "易失的",
             "page": 113,
             "context": "A term that describes data (usually in RAM) that can exist only with a constant supply of power.",
-            "context_CN": "一个描述数据（通常在RAM中）的术语，该数据只能在持续供电的情况下存在。"
+            "context_CN": "一个描述数据（通常在内存中）的术语，该数据只能在持续供电的情况下存在。"
         },
         {
             "word": "boot loader",
@@ -1528,14 +1528,14 @@
         },
         {
             "word": "hard disk platter",
-            "word_CN": "硬盘盘",
+            "word_CN": "硬盘盘片",
             "page": 119,
             "context": "The component of a hard disk drive on which data is stored. It is a flat, rigid disk made of aluminum or glass and coated with magnetic oxide.",
             "context_CN": "硬盘驱动器上存储数据的组件。它是由铝或玻璃制成并涂有磁性氧化物的平整刚性磁盘。"
         },
         {
             "word": "magnetic storage",
-            "word_CN": "磁存储",
+            "word_CN": "磁储存器",
             "page": 119,
             "context": "A technology for recording data onto disks or tape by magnetizing particles of an oxide-based surface coating.",
             "context_CN": "通过磁化基于氧化物的表面涂层的粒子将数据记录到磁盘或磁带上的技术。"
