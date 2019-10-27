@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/5.10.0-12/css/all.css">
+    <!-- <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/5.10.0-12/css/all.css"> -->
     <link rel="stylesheet" href="https://cdn.staticfile.org/vuetify/2.0.10/vuetify.css">
     <link rel="stylesheet" href="https://cdn.staticfile.org/MaterialDesign-Webfont/4.1.95/css/materialdesignicons.css">
     <!-- <link href="https://cdn.staticfile.org/element-ui/2.11.1/theme-chalk/index.css" rel="stylesheet"> -->
@@ -109,7 +109,7 @@
                                 {{glossary[index].word}}
                             </div>
                             <div v-show="show_spell" style="margin-left:10%;margin-right:10%;">
-                                <v-text-field id="input" type="text" v-model="spell" label="拼写" :success="spell_success">
+                                <v-text-field id="input" type="text" v-model="spell_text" label="拼写" :success="spell_success" @keyup.enter="next_word">
                             </div>
 
                         </div>
@@ -345,14 +345,14 @@
         },
         {
             "word": "gigabyte",
-            "word_CN": "技嘉",
+            "word_CN": "千兆字节",
             "page": 26,
             "context": "(gB) Approximately 1 billion bytes; exactly 1,024 megabytes (1,073,741,824 bytes).",
             "context_CN": "（gB）大约10亿字节；恰好1,024兆字节（1,073,741,824字节）。"
         },
         {
             "word": "kilobit",
-            "word_CN": "千位元",
+            "word_CN": "千位",
             "page": 26,
             "context": "(Kbit or Kb) 1024 bits.",
             "context_CN": "（千位或千位）1024位。"
@@ -450,7 +450,7 @@
         },
         {
             "word": "Ogg Vorbis",
-            "word_CN": "奥格·沃比斯",
+            "word_CN": "Ogg Vorbis",
             "page": 32,
             "context": "An open source audio file format.",
             "context_CN": "一种开源音频文件格式。"
@@ -611,7 +611,7 @@
         },
         {
             "word": "photosites",
-            "word_CN": "光地",
+            "word_CN": "感光点",
             "page": 40,
             "context": "In digital photography, a single point on an image capture chip, equivalent to one pixel.",
             "context_CN": "在数字摄影中，图像捕获芯片上的单个点，相当于一个像素。"
@@ -653,7 +653,7 @@
         },
         {
             "word": "RAW",
-            "word_CN": "生的",
+            "word_CN": "RAW",
             "page": 41,
             "context": "In the context of digital graphics, a file that contains unprocessed image data directly from a digital camera's sensors.",
             "context_CN": "在数字图形的上下文中，该文件直接包含来自数码相机传感器的未处理图像数据。"
@@ -709,7 +709,7 @@
         },
         {
             "word": "resolution dependent",
-            "word_CN": "取决于分辨率",
+            "word_CN": "分辨率依赖",
             "page": 43,
             "context": "graphics, such as bitmaps, in which the quality of the image is dependent on the number of pixels constituting the image.",
             "context_CN": "图形，例如位图，其中图像的质量取决于构成图像的像素数。"
@@ -779,17 +779,17 @@
         },
         {
             "word": "stereo pair",
-            "word_CN": "立体声对",
+            "word_CN": "立体图像对",
             "page": 49,
-            "context": null,
-            "context_CN": ""
+            "context": "A pair of photographs of the same area taken from slightly different positions so as to give a stereoscopic effect when properly mounted and viewed.",
+            "context_CN": "从略微不同的位置拍摄的同一区域的一对照片，以便在正确安装和观看时产生立体效果。"
         },
         {
             "word": "stereogram",
             "word_CN": "立体图",
             "page": 49,
             "context": "Two images from a stereo pair that are combined into a single slide.",
-            "context_CN": "立体声对中的两个图像组合成一张幻灯片。"
+            "context_CN": "立体图像对中的两个图像组合成一张幻灯片。"
         },
         {
             "word": "stereoscopic imaging",
@@ -954,7 +954,7 @@
         },
         {
             "word": "ASF",
-            "word_CN": "美国空军",
+            "word_CN": "ASF",
             "page": 66,
             "context": "(Advanced Systems Format) Microsoft's proprietary container format for streaming digital multimedia; typically holds WMV and WMA files.",
             "context_CN": "（高级系统格式）Microsoft专有的流数字多媒体容器格式；通常包含WMV和WMA文件。"
@@ -964,7 +964,7 @@
             "word_CN": "编解码器",
             "page": 66,
             "context": "Short for compressor/ decompressor; a hardware or software routine that compresses and decompresses digital graphics, sound, and video files.",
-            "context_CN": "压缩机/减压器的缩写；压缩或解压缩数字图形，声音和视频文件的硬件或软件例程。"
+            "context_CN": "编码器/解码器的缩写；压缩或解压缩数字图形，声音和视频文件的硬件或软件程序。"
         },
         {
             "word": "compression ratio",
@@ -996,21 +996,21 @@
         },
         {
             "word": "MOV",
-            "word_CN": "影片",
+            "word_CN": "MOV",
             "page": 66,
             "context": "A multimedia file format, popular for digital videos, that works with QuickTime software.",
             "context_CN": "一种多媒体文件格式，适用于数字视频，可与QuickTime软件一起使用。"
         },
         {
             "word": "MPEG",
-            "word_CN": "MPEG格式",
+            "word_CN": "MPEG",
             "page": 66,
             "context": "(Moving Picture Experts group) A family of highly compressed container file formats and codecs for digital multimedia; MPEg-1, MPEg-2, and MPEg-4.",
             "context_CN": "（运动图片专家组）用于数字多媒体的高度压缩的容器文件格式和编解码器系列； MPEg-1，MPEg-2和MPEg-4。"
         },
         {
             "word": "Ogg Theora",
-            "word_CN": "奥格·西奥拉（Ogg Theora）",
+            "word_CN": "Ogg Theora",
             "page": 66,
             "context": "A non-proprietary container format (Ogg) and video codec (Theora).",
             "context_CN": "非专有容器格式（Ogg）和视频编解码器（Theora）。"
@@ -1048,7 +1048,7 @@
             "word_CN": "中央处理器",
             "page": 85,
             "context": "(CPU) The main processing circuitry, or \"chip,\" within a computer that contains the ALU, control unit, and registers.",
-            "context_CN": "（CPU）计算机中的主要处理电路或“芯片”，其中包含ALU，控制单元和寄存器。"
+            "context_CN": "（CPU）计算机中的主要处理电路或“芯片”，其中包含算术逻辑单元、控制单元和寄存器。"
         },
         {
             "word": "computer",
@@ -1066,7 +1066,7 @@
         },
         {
             "word": "memory",
-            "word_CN": "记忆",
+            "word_CN": "内存",
             "page": 85,
             "context": "The computer circuitry that holds data waiting to be processed.",
             "context_CN": "保留等待处理的数据的计算机电路。"
@@ -1110,7 +1110,7 @@
             "word": "apps",
             "word_CN": "应用",
             "page": 86,
-            "context": null,
+            "context": "",
             "context_CN": ""
         },
         {
@@ -1437,7 +1437,7 @@
         },
         {
             "word": "CISC",
-            "word_CN": "中钢国际",
+            "word_CN": "CISC",
             "page": 112,
             "context": "(complex instruction set computer) A general-purpose microprocessor chip designed to handle a wider array of instructions than a RISC chip.",
             "context_CN": "（复杂指令集计算机）一种通用微处理器芯片，设计用于处理比RISC芯片更广泛的指令。"
@@ -1451,7 +1451,7 @@
         },
         {
             "word": "RISC",
-            "word_CN": "风险",
+            "word_CN": "RISC",
             "page": 112,
             "context": "(reduced instruction set computer) A microprocessor designed for rapid and efficient processing of a small set of simple instructions.",
             "context_CN": "（精简指令集计算机）一种微处理器，设计用于快速，高效地处理少量简单指令。"
@@ -1500,7 +1500,7 @@
         },
         {
             "word": "ROM",
-            "word_CN": "ROOM",
+            "word_CN": "ROM",
             "page": 114,
             "context": "(read-only memory) Refers to one or more integrated circuits that contain permanent instructions that the computer uses during the boot process.",
             "context_CN": "（只读存储器）指的是一个或多个集成电路，其中包含计算机在引导过程中使用的永久性指令。"
@@ -1906,31 +1906,31 @@
         },
         {
             "word": "communication channel",
-            "word_CN": "沟通渠道",
+            "word_CN": "通信信道",
             "page": 162,
             "context": "Any pathway between the sender and receiver; channel may refer to a physical medium or a frequency.",
             "context_CN": "发送者和接收者之间的任何路径；信道可以指物理介质或频率。"
         },
         {
             "word": "wired channels",
-            "word_CN": "有线频道",
+            "word_CN": "有线信道",
             "page": 162,
             "context": "Communication pathways that use copper, coaxial, or fiber cables to carry data.",
             "context_CN": "使用铜缆，同轴电缆或光缆传输数据的通信路径。"
         },
         {
             "word": "wireless channels",
-            "word_CN": "无线频道",
+            "word_CN": "无线信道",
             "page": 162,
             "context": "Communication pathways that travel through the air as radio frequencies or microwave signals.",
             "context_CN": "以无线电频率或微波信号在空中传播的通信路径。"
         },
         {
             "word": "microwaves",
-            "word_CN": "微波炉",
+            "word_CN": "微波",
             "page": 164,
-            "context": "Electromagnetic waves with a frequency of at least",
-            "context_CN": "电磁波的频率至少为"
+            "context": "Electromagnetic waves with a frequency of at least 1 gigahertz; one type of channel for transmitting data over communications networks.",
+            "context_CN": "频率至少为1GHz的电磁波；一种用于在通信网络上传输数据的信道。"
         },
         {
             "word": "RF signals",
@@ -2188,7 +2188,7 @@
             "word": "static IP addresses",
             "word_CN": "静态IP地址",
             "page": 179,
-            "context": null,
+            "context": "",
             "context_CN": ""
         },
         {
@@ -2202,7 +2202,7 @@
             "word": "dynamic IP addresses",
             "word_CN": "动态IP地址",
             "page": 180,
-            "context": null,
+            "context": "",
             "context_CN": ""
         },
         {
@@ -2459,7 +2459,7 @@
         },
         {
             "word": "Ethernet",
-            "word_CN": "乙太网路",
+            "word_CN": "以太网路",
             "page": 203,
             "context": "A popular network technology in which network nodes are connected by coaxial cable or twisted-pair wire.",
             "context_CN": "一种流行的网络技术，其中网络节点通过同轴电缆或双绞线连接。"
@@ -2487,7 +2487,7 @@
         },
         {
             "word": "Wi-Fi",
-            "word_CN": "无线网络",
+            "word_CN": "Wi-Fi",
             "page": 205,
             "context": "hotspot The geographical area in which you can connect to a Wi-Fi signal, such as a Wi-Fi equipped campus or coffeehouse.",
             "context_CN": "热点可以连接到Wi-Fi信号的地理区域，例如配备Wi-Fi的校园或咖啡馆。"
@@ -2503,7 +2503,7 @@
             "word": "MIMO (multiple-input multipleoutput)",
             "word_CN": "MIMO（多输入多输出）",
             "page": 206,
-            "context": null,
+            "context": "",
             "context_CN": ""
         },
         {
@@ -3364,14 +3364,14 @@
             "word": "@username,",
             "word_CN": "@用户名，",
             "page": 339,
-            "context": null,
+            "context": "",
             "context_CN": ""
         },
         {
             "word": "#hashtag",
             "word_CN": "",
             "page": 339,
-            "context": null,
+            "context": "",
             "context_CN": ""
         },
         {
@@ -5485,7 +5485,7 @@
             "word": "contract worker",
             "word_CN": "合同工",
             "page": 569,
-            "context": null,
+            "context": "",
             "context_CN": ""
         },
         {
@@ -5605,15 +5605,15 @@
                 show_collection: false,
                 collection: [],
                 loading: false,
-                spell: "",
+                spell_text: "",
                 spell_success: false,
                 random: false,
 
                 panel: [0, 1, 2],
                 update_log: [
-                    ["v1.0", "完成"],
-                    ["v1.1", "保存单词浏览记录"],
-                    ["v1.2", "增加收藏夹"],
+                    ["v1.0", "完成基本功能", "10.27"],
+                    ["v1.1", "保存单词浏览记录", "10.27"],
+                    ["v1.2", "增加收藏夹", "10.27"],
                 ]
             }
         },
@@ -5650,6 +5650,10 @@
                     this.index = last_index;
                 else
                     this.index = 0;
+                if (this.show_spell) {
+                    var it = document.getElementById("input");
+                    it.click();
+                }
             },
             collect_word() {
                 this.collection.push(this.index)
@@ -5662,7 +5666,6 @@
                     }
                 }
             },
-
 
             GetQueryString(name) {
                 const url = decodeURI(window.location.search)
@@ -5683,11 +5686,11 @@
             }
         },
         watch: {
-            spell() {
-                console.log(this.spell);
-                var spell = this.spell.replace(/\s*/g, "").toLowerCase();
+            spell_text() {
+                // console.log(this.spell);
+                var spell_text = this.spell_text.replace(/\s*/g, "").toLowerCase();
                 var word = glossary[this.index].word.replace(/\s*/g, "").toLowerCase();
-                if (spell == word) {
+                if (spell_text == word) {
                     this.spell_success = true;
                 }
                 else {
@@ -5696,7 +5699,7 @@
             },
             index() {
                 this.index_history.push(this.index);
-                this.spell = "";
+                this.spell_text = "";
                 localStorage.setItem("index", this.index);
             },
             collection() {
