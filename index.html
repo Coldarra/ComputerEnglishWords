@@ -70,7 +70,7 @@
             z-index: 100;
         }
 
-        .explanationleft{
+        .explanationleft {
             position: fixed;
             bottom: 0;
             left: 0;
@@ -78,7 +78,7 @@
             z-index: 100;
         }
 
-        .collection{
+        .collection {
             text-align: center;
             position: fixed;
             bottom: 0;
@@ -103,63 +103,6 @@
                     下一个
                 </v-btn>
             </div>
-            <div class="copyright">
-                <v-tooltip top>
-                    <template v-slot:activator="{ on }">
-                        <div v-on="on">
-                            &copy;zhengyiming cs161.cn
-                        </div>
-                    </template>
-                    <span>
-                        <br>
-                        <p v-for="(item,i) in update_log" :key="i">
-                            {{item[0]}}: {{item[1]}}
-                        </p>
-                    </span>
-                </v-tooltip>
-            </div>
-            <div class="explanationleft">
-                <div @click="copy_collection_show = true">收藏夹</div>
-                <v-tooltip top>
-                    <template v-slot:activator="{ on }">
-                        <div v-on="on">使用说明</div>
-                    </template>
-                    <span>
-                        <p><br>
-                            1. 浏览进度和单词收藏夹仅保存在本地；
-                            <br> 2. 使用完毕后建议导出单词收藏夹，下次使用前再导入。
-                        </p>
-                    </span>
-                </v-tooltip>
-            </div>
-
-            <v-dialog v-model="copy_collection_show" width="500">
-                <v-card>
-                    <v-card-title>单词收藏夹</v-card-title>
-                    <v-card-text>{{collection}}</v-card-text>
-                    <v-card-actions>
-                        <v-btn text color="deep-purple accent-4" disabled @click="alert('请手动复制')">
-                            请手动复制
-                        </v-btn>
-                        <v-btn text color="deep-purple accent-4" @click="paste_collection_show = true">
-                            导入
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
-            <v-dialog v-model="paste_collection_show" width="500">
-                <v-card>
-                    <v-card-title>导入到收藏夹</v-card-title>
-                    <v-card-text>
-                        <v-textarea type="text" v-model="paste_collection_text"></v-textarea>
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-btn text color="deep-purple accent-4" @click="pasteToCollection">
-                            确定
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
             <v-content id="content">
                 <div class="ce" style="margin-top:2.5rem;"><span class="ce_title">
                         <div>
@@ -226,6 +169,62 @@
                     <div>
                         <!-- {{index_history}} -->
             </v-content>
+            <div class="copyright">
+                <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                        <div v-on="on">
+                            &copy;zhengyiming cs161.cn
+                        </div>
+                    </template>
+                    <span>
+                        <br>
+                        <p v-for="(item,i) in update_log" :key="i">
+                            {{item[0]}}: {{item[1]}}
+                        </p>
+                    </span>
+                </v-tooltip>
+            </div>
+            <div class="explanationleft">
+                <div @click="copy_collection_show = true">收藏夹</div>
+                <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                        <div v-on="on">使用说明</div>
+                    </template>
+                    <span>
+                        <p><br> 1. 浏览进度和单词收藏夹仅保存在本地；
+                            <br> 2. 使用完毕后建议导出单词收藏夹，下次使用前再导入。
+                        </p>
+                    </span>
+                </v-tooltip>
+            </div>
+
+            <v-dialog v-model="copy_collection_show" width="500">
+                <v-card>
+                    <v-card-title>单词收藏夹</v-card-title>
+                    <v-card-text>{{collection}}</v-card-text>
+                    <v-card-actions>
+                        <v-btn text color="deep-purple accent-4" disabled @click="alert('请手动复制')">
+                            请手动复制
+                        </v-btn>
+                        <v-btn text color="deep-purple accent-4" @click="paste_collection_show = true">
+                            导入
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+            <v-dialog v-model="paste_collection_show" width="500">
+                <v-card>
+                    <v-card-title>导入到收藏夹</v-card-title>
+                    <v-card-text>
+                        <v-textarea type="text" v-model="paste_collection_text"></v-textarea>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn text color="deep-purple accent-4" @click="pasteToCollection">
+                            确定
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
             </div>
     </v-app>
 </body>
@@ -5672,7 +5671,7 @@
                     ["v1.0", "完成基本功能", "10.27"],
                     ["v1.1", "保存单词浏览记录", "10.27"],
                     ["v1.2", "增加单词收藏功能", "10.27"],
-                    ["v1.3", "导入导出到收藏夹", "10.27"],
+                    ["v1.3", "导入导出收藏夹", "10.27"],
                 ]
             }
         },
