@@ -5636,7 +5636,7 @@
 
             setTimeout(() => {
                 if (local_index > 0) {
-                    var r = confirm("是否从第" + (Number(local_index) + 1) + "个单词继续")
+                    var r = confirm("是否从第" + (Number(local_index) + 1) + "个单词"+glossary[Number(local_index)].word+"继续")
                     if (r == true) {
                         this.index = Number(local_index);
                     }
