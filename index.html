@@ -53,6 +53,7 @@
             bottom: 10%;
             z-index: 10;
         }
+
         .toll_right {
             position: fixed;
             right: 4%;
@@ -64,6 +65,7 @@
 
 </head>
 <!-- 源码开放，尽情查阅  -->
+
 <body>
     <v-app id="app">
         <div>
@@ -5595,7 +5597,7 @@
                     it.click();
                 }
             },
-            last_word(){
+            last_word() {
 
             },
             GetQueryString(name) {
@@ -5628,25 +5630,27 @@
         mounted: function () {
             var local_index = localStorage.getItem("index");
             console.log(local_index);
-            
+
             var id = Number(this.GetQueryString("id"));
             this.index = Math.max(0, this.GetQueryString("id") - 1) % glossary.length;
 
-            if(local_index>0){
-                var r = confirm("是否从第" + (Number(local_index)+1) + "个单词继续")
-                if (r == true) {
-                    this.index = Number(local_index);
+            setTimeout(() => {
+                if (local_index > 0) {
+                    var r = confirm("是否从第" + (Number(local_index) + 1) + "个单词继续")
+                    if (r == true) {
+                        this.index = Number(local_index);
+                    }
+                    else {
+                    }
                 }
-                else {
-                }
-            }
+            }, 1000);
 
         },
     });
 </script>
 
 <script>
-   /*
+/*
     v1.0 完成
     v1.1 保存单词记录，重新打开可从上次位置继续
 
