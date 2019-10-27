@@ -69,6 +69,22 @@
             color: #879298;
             z-index: 100;
         }
+
+        .explanationleft{
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            color: #879298;
+            z-index: 100;
+        }
+
+        .collection{
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            color: #879298;
+            z-index: 100;
+        }
     </style>
 
 
@@ -95,13 +111,55 @@
                         </div>
                     </template>
                     <span>
+                        <br>
                         <p v-for="(item,i) in update_log" :key="i">
                             {{item[0]}}: {{item[1]}}
                         </p>
                     </span>
-
                 </v-tooltip>
             </div>
+            <div class="explanationleft">
+                <div @click="copy_collection_show = true">收藏夹</div>
+                <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                        <div v-on="on">使用说明</div>
+                    </template>
+                    <span>
+                        <p><br>
+                            1. 浏览进度和单词收藏夹仅保存在本地；
+                            <br> 2. 使用完毕后建议导出单词收藏夹，下次使用前再导入。
+                        </p>
+                    </span>
+                </v-tooltip>
+            </div>
+
+            <v-dialog v-model="copy_collection_show" width="500">
+                <v-card>
+                    <v-card-title>单词收藏夹</v-card-title>
+                    <v-card-text>{{collection}}</v-card-text>
+                    <v-card-actions>
+                        <v-btn text color="deep-purple accent-4" disabled @click="alert('请手动复制')">
+                            请手动复制
+                        </v-btn>
+                        <v-btn text color="deep-purple accent-4" @click="paste_collection_show = true">
+                            导入
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+            <v-dialog v-model="paste_collection_show" width="500">
+                <v-card>
+                    <v-card-title>导入到收藏夹</v-card-title>
+                    <v-card-text>
+                        <v-textarea type="text" v-model="paste_collection_text"></v-textarea>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn text color="deep-purple accent-4" @click="pasteToCollection">
+                            确定
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
             <v-content id="content">
                 <div class="ce" style="margin-top:2.5rem;"><span class="ce_title">
                         <div>
@@ -116,8 +174,7 @@
                     </span>
                 </div>
                 <div style="margin-top:0.5rem;" class="ce_subtitle">词汇表 第{{index+1}}个 教材第{{glossary[index].page}}页
-                    <v-btn
-                        icon v-if="Contains(collection,index)>=0" style="color:gold" @click="uncollect_word">
+                    <v-btn icon v-if="Contains(collection,index)>=0" style="color:gold" @click="uncollect_word">
                         <v-icon>mdi-star</v-icon>
                     </v-btn>
                     <v-btn icon v-else @click="collect_word">
@@ -139,8 +196,6 @@
                     <v-btn color="#6539D6" outlined @click="show_context_EN = !show_context_EN">英文解释</v-btn>
                 </div> -->
                 <div style="margin-top:0.5rem;margin-left:10%;margin-right:10%;">
-
-
 
                     <v-expansion-panels accordion multiple v-model="panel" style="margin-top:0.5rem">
 
@@ -5604,6 +5659,9 @@
                 index_history: [],
                 show_collection: false,
                 collection: [],
+                copy_collection_show: false,
+                paste_collection_text: "",
+                paste_collection_show: false,
                 loading: false,
                 spell_text: "",
                 spell_success: false,
@@ -5613,7 +5671,8 @@
                 update_log: [
                     ["v1.0", "完成基本功能", "10.27"],
                     ["v1.1", "保存单词浏览记录", "10.27"],
-                    ["v1.2", "增加收藏夹", "10.27"],
+                    ["v1.2", "增加单词收藏功能", "10.27"],
+                    ["v1.3", "导入导出到收藏夹", "10.27"],
                 ]
             }
         },
@@ -5683,6 +5742,20 @@
                     }
                 }
                 return -1;
+            },
+            copyText(text) {
+                document.execCommand(text);
+            },
+            pasteToCollection() {
+                try {
+                    var collection = JSON.parse(this.paste_collection_text);
+                    this.collection = collection;
+                    this.copy_collection_show = false;
+                    this.paste_collection_show = false;
+                    alert("导入成功");
+                } catch (error) {
+                    alert("导入失败 (" + error + ")");
+                }
             }
         },
         watch: {
@@ -5728,6 +5801,7 @@
                     }
                 }
             }, 1000);
+            this.copyText("123")
 
         },
     });
