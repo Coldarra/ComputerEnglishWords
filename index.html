@@ -207,7 +207,7 @@
                             请手动复制
                         </v-btn>
                         <v-btn text color="deep-purple accent-4" @click="paste_collection_show = true">
-                            导入
+                            导入到收藏夹
                         </v-btn>
                     </v-card-actions>
                 </v-card>
@@ -221,6 +221,9 @@
                     <v-card-actions>
                         <v-btn text color="deep-purple accent-4" @click="pasteToCollection">
                             确定
+                        </v-btn>
+                        <v-btn text color="deep-purple accent-4" disabled @click="alert('导入将覆盖已有收藏夹')">
+                            导入将覆盖已有收藏夹
                         </v-btn>
                     </v-card-actions>
                 </v-card>
@@ -5714,7 +5717,8 @@
                 }
             },
             collect_word() {
-                this.collection.push(this.index)
+                this.collection.push(this.index);
+                this.collection.sort();
             },
             uncollect_word() {
                 for (let i = 0; i < this.collection.length; i++) {
@@ -5748,6 +5752,7 @@
             pasteToCollection() {
                 try {
                     var collection = JSON.parse(this.paste_collection_text);
+                    collection.sort();
                     this.collection = collection;
                     this.copy_collection_show = false;
                     this.paste_collection_show = false;
@@ -5775,7 +5780,6 @@
                 localStorage.setItem("index", this.index);
             },
             collection() {
-                // console.log(this.collection);
                 localStorage.setItem("collection", JSON.stringify(this.collection))
             }
         },
