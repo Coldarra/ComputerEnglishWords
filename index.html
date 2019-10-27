@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <!-- 源码开放，尽情查阅  -->
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/5.10.0-12/css/all.css">
     <link rel="stylesheet" href="https://cdn.staticfile.org/vuetify/2.0.10/vuetify.css">
-    <!-- <link rel="stylesheet" href="https://cdn.staticfile.org/MaterialDesign-Webfont/4.1.95/css/materialdesignicons.css"> -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/MaterialDesign-Webfont/4.1.95/css/materialdesignicons.css">
     <!-- <link href="https://cdn.staticfile.org/element-ui/2.11.1/theme-chalk/index.css" rel="stylesheet"> -->
     <title>词汇表-计算机英语</title>
     <style lang="scss">
@@ -60,6 +61,14 @@
             bottom: 10%;
             z-index: 10;
         }
+
+        .copyright {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            color: #879298;
+            z-index: 100;
+        }
     </style>
 
 
@@ -68,18 +77,30 @@
 <body>
     <v-app id="app">
         <div>
-            <!-- <div class="toll_left">
-                <v-btn class="mx-2" fab dark color="blue lighten-2" @click="last_word">
+            <div class="toll_left">
+                <v-btn class="mx-2" fab dark color="blue lighten-3" @click="last_word">
                     上一个
                 </v-btn>
-            </div> -->
+            </div>
             <div class="toll_right">
-                <v-btn class="mx-2" fab dark color="blue lighten-2" @click="next_word">
+                <v-btn class="mx-2" fab dark color="blue lighten-1" @click="next_word">
                     下一个
                 </v-btn>
             </div>
-            <div style="position:fixed; bottom:0; right:0;color: #879298">
-                &copy;zhengyiming cs161.cn
+            <div class="copyright">
+                <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                        <div v-on="on">
+                            &copy;zhengyiming cs161.cn
+                        </div>
+                    </template>
+                    <span>
+                        <p v-for="(item,i) in update_log" :key="i">
+                            {{item[0]}}: {{item[1]}}
+                        </p>
+                    </span>
+
+                </v-tooltip>
             </div>
             <v-content id="content">
                 <div class="ce" style="margin-top:1.5rem;"><span class="ce_title">计算机英语</span>
@@ -91,8 +112,8 @@
                     </v-btn>
                     <v-btn color="purple lighten-2" text @click="random = !random">{{random?"随机模式":"顺序模式"}}
                     </v-btn>
-                    <!-- <v-btn color="purple lighten-2" text @click="submit">跳转
-                    </v-btn> -->
+                    <v-btn color="purple lighten-2" text @click="show_collection = !show_collection">{{show_collection?"只看收藏":"全部单词"}}
+                    </v-btn>
                 </div>
 
                 <!-- <div style="margin-top:1rem;" class="ce_button">
@@ -104,6 +125,13 @@
                     <div>
                         <div v-show="!show_spell" class="headline">
                             {{glossary[index].word}}
+                            <v-btn icon v-if="Contains(collection,index)>=0" style="color:gold" @click="uncollect_word">
+                                <v-icon>mdi-star</v-icon>
+                            </v-btn>
+                            <v-btn icon v-else @click="collect_word">
+                                <v-icon>mdi-star</v-icon>
+                            </v-btn>
+
                         </div>
 
                         <div v-show="show_spell">
@@ -140,7 +168,7 @@
                     </v-expansion-panels>
 
                     <div>
-                        <!-- {{show_index}} -->
+                        <!-- {{index_history}} -->
             </v-content>
             </div>
     </v-app>
@@ -5572,33 +5600,67 @@
                 show_context_CN: true,
                 show_context_EN: true,
                 show_spell: false,
-                show_index: [],
+                index_history: [],
+                show_collection: false,
+                collection: [],
                 loading: false,
                 spell: "",
                 spell_success: false,
                 random: false,
 
-                panel: [0, 1, 2]
+                panel: [0, 1, 2],
+                update_log: [
+                    ["v1.0", "完成"],
+                    ["v1.1", "保存单词浏览记录"],
+                    ["v1.2", "增加收藏夹"],
+                ]
             }
         },
         methods: {
             submit() { },
             next_word() {
                 this.spell_success = false;
-                if (this.random) {
-                    this.index = Math.floor((Math.random() * glossary.length))
+                if (this.show_collection) {
+                    var collection_index = this.Contains(this.collection, this.index);
+                    if (this.random)
+                        collection_index = Math.floor((Math.random() * this.collection.length))
+                    else
+                        collection_index = (collection_index + 1) % this.collection.length;
+                    this.index = this.collection[collection_index]
                 }
                 else {
-                    this.index = (this.index + 1) % glossary.length;
+                    if (this.random)
+                        this.index = Math.floor((Math.random() * glossary.length))
+                    else
+                        this.index = (this.index + 1) % glossary.length;
                 }
+                this.index = this.index || 0;
                 if (this.show_spell) {
                     var it = document.getElementById("input");
                     it.click();
                 }
             },
             last_word() {
-
+                this.index_history.pop()
+                var last_index = this.index_history.pop()
+                if (last_index)
+                    this.index = last_index;
+                else
+                    this.index = 0;
             },
+            collect_word() {
+                this.collection.push(this.index)
+            },
+            uncollect_word() {
+                for (let i = 0; i < this.collection.length; i++) {
+                    if (this.collection[i] == this.index) {
+                        this.collection.splice(i, 1);
+                        break;
+                    }
+                }
+            },
+
+
             GetQueryString(name) {
                 const url = decodeURI(window.location.search)
                 var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
@@ -5606,6 +5668,15 @@
                 if (r != null)
                     return unescape(r[2]);
                 return null;
+            },
+            Contains(arr, obj) {
+                var i = arr.length;
+                for (let i = 0; i < arr.length; i++) {
+                    if (arr[i] === obj) {
+                        return i;
+                    }
+                }
+                return -1;
             }
         },
         watch: {
@@ -5621,12 +5692,20 @@
                 }
             },
             index() {
-                this.show_index.push(this.index);
+                this.index_history.push(this.index);
                 this.spell = "";
                 localStorage.setItem("index", this.index);
+            },
+            collection() {
+                console.log(this.collection);
+                localStorage.setItem("collection", JSON.stringify(this.collection))
             }
         },
         mounted: function () {
+            var local_collection = localStorage.getItem("collection");
+            if (local_collection) this.collection = JSON.parse(local_collection)
+
+
             var local_index = localStorage.getItem("index");
             console.log(local_index);
 
@@ -5635,7 +5714,7 @@
 
             setTimeout(() => {
                 if (local_index > 0) {
-                    var r = confirm("是否从第" + (Number(local_index) + 1) + "个单词"+glossary[Number(local_index)].word+"继续")
+                    var r = confirm("是否从第" + (Number(local_index) + 1) + "个单词" + glossary[Number(local_index)].word + "继续")
                     if (r == true) {
                         this.index = Number(local_index);
                     }
@@ -5650,8 +5729,6 @@
 
 <script>
 /*
-    v1.0 完成
-    v1.1 保存单词记录，重新打开可从上次位置继续
 
 */
 </script>
