@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdn.staticfile.org/vuetify/2.0.10/vuetify.css">
     <!-- <link rel="stylesheet" href="https://cdn.staticfile.org/MaterialDesign-Webfont/4.1.95/css/materialdesignicons.css"> -->
     <!-- <link href="https://cdn.staticfile.org/element-ui/2.11.1/theme-chalk/index.css" rel="stylesheet"> -->
-    <title>计算机英语</title>
+    <title>词汇表-计算机英语</title>
     <style lang="scss">
         #app {
             background-image: url("http://cdn.clodia.cn/app-sign-up.jpg");
@@ -47,7 +47,13 @@
             /* font-size: 1rem !important; */
         }
 
-        .toll {
+        .toll_left {
+            position: fixed;
+            left: 4%;
+            bottom: 10%;
+            z-index: 10;
+        }
+        .toll_right {
             position: fixed;
             right: 4%;
             bottom: 10%;
@@ -61,10 +67,18 @@
 <body>
     <v-app id="app">
         <div>
-            <div class="toll">
+            <!-- <div class="toll_left">
+                <v-btn class="mx-2" fab dark color="blue lighten-2" @click="last_word">
+                    上一个
+                </v-btn>
+            </div> -->
+            <div class="toll_right">
                 <v-btn class="mx-2" fab dark color="blue lighten-2" @click="next_word">
                     下一个
                 </v-btn>
+            </div>
+            <div style="position:fixed; bottom:0; right:0;color: #879298">
+                &copy;zhengyiming cs161.cn
             </div>
             <v-content id="content">
                 <div class="ce" style="margin-top:1.5rem;"><span class="ce_title">计算机英语</span>
@@ -76,6 +90,8 @@
                     </v-btn>
                     <v-btn color="purple lighten-2" text @click="random = !random">{{random?"随机模式":"顺序模式"}}
                     </v-btn>
+                    <!-- <v-btn color="purple lighten-2" text @click="submit">跳转
+                    </v-btn> -->
                 </div>
 
                 <!-- <div style="margin-top:1rem;" class="ce_button">
@@ -5578,6 +5594,9 @@
                     var it = document.getElementById("input");
                     it.click();
                 }
+            },
+            last_word(){
+
             },
             GetQueryString(name) {
                 const url = decodeURI(window.location.search)
