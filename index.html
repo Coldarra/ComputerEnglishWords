@@ -228,6 +228,7 @@
                     </v-card-actions>
                 </v-card>
             </v-dialog>
+            <!-- {{index_history}} -->
             </div>
     </v-app>
 </body>
@@ -5781,15 +5782,19 @@
             },
             collection() {
                 localStorage.setItem("collection", JSON.stringify(this.collection))
+            },
+            index_history() {
+                localStorage.setItem("index_history", JSON.stringify(this.index_history))
             }
         },
         mounted: function () {
             var local_collection = localStorage.getItem("collection");
             if (local_collection) this.collection = JSON.parse(local_collection)
-
+            var local_history = localStorage.getItem("index_history");
+            if (local_history) this.index_history = JSON.parse(local_history)
 
             var local_index = localStorage.getItem("index");
-            console.log(local_index);
+            // console.log(local_index);
 
             var id = Number(this.GetQueryString("id"));
             this.index = Math.max(0, this.GetQueryString("id") - 1) % glossary.length;
@@ -5798,7 +5803,8 @@
                 if (local_index > 0) {
                     var r = confirm("是否从第" + (Number(local_index) + 1) + "个单词" + glossary[Number(local_index)].word + "继续")
                     if (r == true) {
-                        this.index = Number(local_index);
+                        // this.index = Number(local_index);
+                        this.last_word()
                     }
                     else {
                     }
