@@ -217,14 +217,15 @@
                     <v-card-title>导入到收藏夹</v-card-title>
                     <v-card-text>
                         <v-textarea type="text" v-model="paste_collection_text"></v-textarea>
+                        <div style="color: #879298;">导出请手动复制&nbsp;&nbsp;导入将覆盖已有收藏夹</div>
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn text color="deep-purple accent-4" disabled @click="alert('请手动复制')">
-                            导出请手动复制
+                        <!-- <v-btn text color="deep-purple accent-4" disabled @click="alert('请手动复制')">
+                             导出请手动复制
                         </v-btn>
                         <v-btn text color="deep-purple accent-4" disabled @click="alert('导入将覆盖已有收藏夹')">
-                            导入将覆盖已有 收藏夹
-                        </v-btn>
+                            导入将覆盖已有收藏夹
+                        </v-btn> -->
                         <v-btn text color="deep-purple accent-4" @click="pasteToCollection">
                             确定导入
                         </v-btn>
@@ -5681,7 +5682,7 @@
                     ["v1.1", "保存单词浏览记录", "10.27"],
                     ["v1.2", "增加单词收藏功能", "10.27"],
                     ["v1.3", "导入导出收藏夹", "10.27"],
-                    ["v1.3", "增加键盘和手势互动", "10.28"],
+                    ["v1.4", "增加键盘和手势互动", "10.28"],
                 ]
             }
         },
