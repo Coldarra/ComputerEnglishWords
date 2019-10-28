@@ -177,9 +177,10 @@
                         </div>
                     </template>
                     <span>
-                        <br>
-                        <p v-for="(item,i) in update_log" :key="i">
-                            {{item[0]}}: {{item[1]}}
+                        <p>
+                            <span v-for="(item,i) in update_log" :key="i">
+                                <br>{{item[0]}}: {{item[1]}}
+                            </span>
                         </p>
                     </span>
                 </v-tooltip>
@@ -229,6 +230,9 @@
                         </v-btn> -->
                         <v-btn text color="deep-purple accent-4" @click="pasteToCollection">
                             确定导入
+                        </v-btn>
+                        <v-btn text color="deep-purple accent-4" @click="copy_collection_show = false">
+                            取消
                         </v-btn>
                     </v-card-actions>
                 </v-card>
@@ -338,7 +342,7 @@
         },
         {
             "word": "character data",
-            "word_CN": "角色数据",
+            "word_CN": "字符数据",
             "page": 22,
             "context": "Letters, symbols, or numerals that will not be used in arithmetic operations (name, Social Security number, etc.).",
             "context_CN": "算术运算中将不使用的字母，符号或数字（名称，社会安全号码等）。"
@@ -5828,9 +5832,9 @@
                 let key = window.event.keyCode;
                 if (key == 37 || key == 38 || key == 65 || key == 87)
                     _this.last_word();
-                if (key == 39 || key == 40 || key == 68 || key == 83) 
+                if (key == 39 || key == 40 || key == 68 || key == 83)
                     _this.next_word();
-                
+
             };
         },
     });
