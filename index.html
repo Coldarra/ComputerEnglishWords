@@ -92,7 +92,7 @@
 
 <body>
     <v-app id="app">
-        <div>
+        <div v-touch="{ left: () => next_word(), right: () => last_word()}">
             <div class="toll_left">
                 <v-btn class="mx-2" fab dark color="light-blue lighten-2" @click="last_word">
                     上一个
@@ -198,7 +198,7 @@
                 </v-tooltip>
             </div>
 
-            <v-dialog v-model="copy_collection_show" width="500">
+            <!-- <v-dialog v-model="copy_collection_show" width="500">
                 <v-card>
                     <v-card-title>单词收藏夹</v-card-title>
                     <v-card-text>{{collection}}</v-card-text>
@@ -211,23 +211,28 @@
                         </v-btn>
                     </v-card-actions>
                 </v-card>
-            </v-dialog>
-            <v-dialog v-model="paste_collection_show" width="500">
+            </v-dialog> -->
+            <v-dialog v-model="copy_collection_show" width="500">
                 <v-card>
                     <v-card-title>导入到收藏夹</v-card-title>
                     <v-card-text>
                         <v-textarea type="text" v-model="paste_collection_text"></v-textarea>
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn text color="deep-purple accent-4" @click="pasteToCollection">
-                            确定
+                        <v-btn text color="deep-purple accent-4" disabled @click="alert('请手动复制')">
+                            导出请手动复制
                         </v-btn>
                         <v-btn text color="deep-purple accent-4" disabled @click="alert('导入将覆盖已有收藏夹')">
-                            导入将覆盖已有收藏夹
+                            导入将覆盖已有 收藏夹
+                        </v-btn>
+                        <v-btn text color="deep-purple accent-4" @click="pasteToCollection">
+                            确定导入
                         </v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
+            <input @keyup.right="next_word">
+
             <!-- {{index_history}} -->
             </div>
     </v-app>
@@ -1691,7 +1696,7 @@
         },
         {
             "word": "remote storage",
-            "word_CN": "远端储存",
+            "word_CN": "远程储存",
             "page": 123,
             "context": "Any storage device that is not directly connected to a computer, but rather is accessed over a network.",
             "context_CN": "任何未直接连接到计算机而是通过网络访问的存储设备。"
@@ -1712,7 +1717,7 @@
         },
         {
             "word": "backup",
-            "word_CN": "后备",
+            "word_CN": "备份",
             "page": 125,
             "context": "A duplicate copy of a file, disk, or tape. Also refers to a Windows utility that allows you to create and restore backups.",
             "context_CN": "文件，磁盘或磁带的重复副本。也指Windows实用程序，可让您创建和还原备份。"
@@ -1740,7 +1745,7 @@
         },
         {
             "word": "peripheral device",
-            "word_CN": "外围设备",
+            "word_CN": "外部设备",
             "page": 130,
             "context": " Components or equipment, such as printers, that expand a computer's input, output, or storage capability.",
             "context_CN": "扩展计算机输入，输出或存储功能的组件或设备，例如打印机。"
@@ -1861,8 +1866,8 @@
             "word": "graphics processing unit",
             "word_CN": "图形处理单元",
             "page": 139,
-            "context": "(gPU) A microprocessor dedicated to rendering and displaying graphics on personal computers, workstations, and videogame consoles.",
-            "context_CN": "（gPU）专用于在个人计算机，工作站和视频游戏机上渲染和显示图形的微处理器。"
+            "context": "(GPU) A microprocessor dedicated to rendering and displaying graphics on personal computers, workstations, and videogame consoles.",
+            "context_CN": "（GPU）专用于在个人计算机，工作站和视频游戏机上渲染和显示图形的微处理器。"
         },
         {
             "word": "integrated graphics",
@@ -3406,7 +3411,7 @@
         },
         {
             "word": "tweets",
-            "word_CN": "鸣叫",
+            "word_CN": "tweets",
             "page": 338,
             "context": "Short messages, sometimes called microblogs, posted on Twitter.",
             "context_CN": "在Twitter上发布的短消息（有时称为微博）。"
@@ -3427,42 +3432,42 @@
         },
         {
             "word": "#hashtag",
-            "word_CN": "",
+            "word_CN": "推文话题",
             "page": 339,
             "context": "",
             "context_CN": ""
         },
         {
             "word": "DM",
-            "word_CN": "糖尿病",
+            "word_CN": "DM",
             "page": 339,
             "context": "In the context of Twitter, messages similar to email that are sent directly to followers.",
             "context_CN": "在Twitter上下文中，类似于电子邮件的消息直接发送给关注者。"
         },
         {
             "word": "follow",
-            "word_CN": "跟随",
+            "word_CN": "关注",
             "page": 339,
             "context": "A Twitter term that describes when people elect to see the tweets of another person.",
             "context_CN": "一个Twitter术语，描述人们何时选择查看他人的推文。"
         },
         {
             "word": "follow back",
-            "word_CN": "跟着回来",
+            "word_CN": "回溯",
             "page": 339,
             "context": "The process of following someone who is following you on Twitter.",
             "context_CN": "在Twitter上关注正在关注您的人的过程。"
         },
         {
             "word": "follower",
-            "word_CN": "追随者",
+            "word_CN": "关注者",
             "page": 339,
             "context": "A person who receives your tweets.",
             "context_CN": "收到您的推文的人。"
         },
         {
             "word": "promoted tweet",
-            "word_CN": "提升推文",
+            "word_CN": "推广推文",
             "page": 339,
             "context": "Tweets purchased by advertisers.",
             "context_CN": "广告客户购买的推文。"
@@ -3490,14 +3495,14 @@
         },
         {
             "word": "NOR",
-            "word_CN": "也不",
+            "word_CN": "NOR",
             "page": 340,
             "context": "A Wikipedia policy that means \"no original research.\" All material must be backed by references.",
             "context_CN": ""
         },
         {
             "word": "NPOV",
-            "word_CN": "封面",
+            "word_CN": "NPOV",
             "page": 340,
             "context": "A Wikipedia policy that means \"neutral point of view.\"",
             "context_CN": "Wikipedia政策，意思是“中立的观点”。"
@@ -5676,6 +5681,7 @@
                     ["v1.1", "保存单词浏览记录", "10.27"],
                     ["v1.2", "增加单词收藏功能", "10.27"],
                     ["v1.3", "导入导出收藏夹", "10.27"],
+                    ["v1.3", "增加键盘和手势互动", "10.28"],
                 ]
             }
         },
@@ -5781,7 +5787,8 @@
                 localStorage.setItem("index", this.index);
             },
             collection() {
-                localStorage.setItem("collection", JSON.stringify(this.collection))
+                localStorage.setItem("collection", JSON.stringify(this.collection));
+                this.paste_collection_text = JSON.stringify(this.collection);
             },
             index_history() {
                 localStorage.setItem("index_history", JSON.stringify(this.index_history))
@@ -5810,8 +5817,21 @@
                     }
                 }
             }, 1000);
-            this.copyText("123")
 
+        },
+        created: function () {
+            var _this = this;
+            document.onkeydown = function (e) {
+                if (_this.show_spell) {
+                    return
+                }
+                let key = window.event.keyCode;
+                if (key == 37 || key == 38 || key == 65 || key == 87)
+                    _this.last_word();
+                if (key == 39 || key == 40 || key == 68 || key == 83) 
+                    _this.next_word();
+                
+            };
         },
     });
 </script>
