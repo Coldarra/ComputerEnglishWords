@@ -175,6 +175,16 @@
                                 中文翻译</v-expansion-panel-header>
                             <v-expansion-panel-content>
                                 {{glossary[index].word_CN}}
+                                <v-btn icon @click="show_note_edit=true">
+                                    <v-icon>mdi-pencil-box-outline</v-icon>
+                                </v-btn>
+                            </v-expansion-panel-content>
+                        </v-expansion-panel>
+                        <v-expansion-panel v-show="notes[index]">
+                            <v-expansion-panel-header>
+                                我的笔记</v-expansion-panel-header>
+                            <v-expansion-panel-content>
+                                {{notes[index]}}
                             </v-expansion-panel-content>
                         </v-expansion-panel>
                         <v-expansion-panel>
@@ -222,7 +232,8 @@
                             <br> 1. 浏览进度和单词收藏夹仅保存在本地；
                             <br> 2. 使用完毕后建议导出单词收藏夹，下次使用前再导入；
                             <br> 3. 支持左右滑动或键盘切换单词或拼写模式回车切换；
-                            <br> 4. 点击顶部箭头可以显示搜索框，再次点击收回。
+                            <br> 4. 点击顶部箭头可以显示搜索框，再次点击收回；
+                            <br> 5. 笔记自动保存，清空即为删除。
                         </p>
                     </span>
                 </v-tooltip>
@@ -249,6 +260,22 @@
                             取消
                         </v-btn>
                     </v-card-actions>
+                </v-card>
+            </v-dialog>
+            <v-dialog v-model="show_note_edit" width="500">
+                <v-card>
+                    <v-card-title>添加笔记</v-card-title>
+                    <v-card-text>
+                        <v-textarea filled type="text" v-model="notes[index]"></v-textarea>
+                    </v-card-text>
+                    <!-- <v-card-actions>
+                        <v-btn text color="deep-purple accent-4" @click="">
+                            确定
+                        </v-btn>
+                        <v-btn text color="deep-purple accent-4" @click="copy_collection_show = false">
+                            取消
+                        </v-btn>
+                    </v-card-actions> -->
                 </v-card>
             </v-dialog>
             <!-- {{index_history}} -->
@@ -2694,7 +2721,7 @@
         },
         {
             "word": "drop box",
-            "word_CN": "投递箱",
+            "word_CN": "多宝箱",
             "page": 219,
             "context": "In the context of file sharing, a folder that allows third parties to add files to it, but does not allow third parties to open, move, or copy files from it.",
             "context_CN": "在文件共享的上下文中，该文件夹允许第三方向其添加文件，但不允许第三方从其打开，移动或复制文件。"
@@ -5685,6 +5712,8 @@
                 show_word_CN: true,
                 show_context_CN: true,
                 show_context_EN: true,
+                show_note_edit: false,
+                notes: {},
                 show_spell: false,
                 index_history: [],
                 show_collection: false,
@@ -5696,7 +5725,7 @@
                 spell_success: false,
                 random: false,
 
-                panel: [0, 1, 2],
+                panel: [0, 1, 2, 3],
                 update_log: [
                     ["v1.0", "完成基本功能", "10.27"],
                     ["v1.1", "保存单词浏览记录", ""],
@@ -5704,6 +5733,7 @@
                     ["v1.3", "导入导出收藏夹", ""],
                     ["v1.4", "增加键盘和手势互动", "10.28"],
                     ["v1.5", "增加搜索框", "10.29"],
+                    ["v1.6", "增加个人笔记", ""],
                 ]
             }
         },
@@ -5814,6 +5844,12 @@
                 localStorage.setItem("collection", JSON.stringify(this.collection));
                 this.paste_collection_text = JSON.stringify(this.collection);
             },
+            notes: {
+                handler() {
+                    // console.log(this.notes);
+                    localStorage.setItem("notes", JSON.stringify(this.notes));
+                }, deep: true
+            },
             index_history() {
                 localStorage.setItem("index_history", JSON.stringify(this.index_history))
             },
@@ -5827,13 +5863,18 @@
                     this.show_search = false;
                 }
 
-            }
+            },
+
         },
         mounted: function () {
             var local_collection = localStorage.getItem("collection");
             if (local_collection) this.collection = JSON.parse(local_collection)
             var local_history = localStorage.getItem("index_history");
             if (local_history) this.index_history = JSON.parse(local_history)
+            var local_notes = localStorage.getItem("notes");
+            console.log(local_notes);
+
+            if (local_notes) this.notes = JSON.parse(local_notes)
 
             var local_index = localStorage.getItem("index");
             // console.log(local_index);
@@ -5859,7 +5900,10 @@
                 // this.glossary_words_CN.push(e.word_CN);
             });
 
-
+            // setInterval(() => {
+            //     console.log(this.notes);
+            //     console.log(localStorage.getItem("notes"));
+            // }, 3000)
         },
         created: function () {
             var _this = this;
