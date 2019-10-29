@@ -124,7 +124,7 @@
 
             <div style="margin-top:0.1rem;color: #879298;">{{index+1}}/{{glossary.length}}
 
-                <span style="position: fixed;left:20%;right:20%;text-align:center;z-index:10;white-space:nowrap;">
+                <span style="position: fixed;left:25%;right:25%;text-align:center;z-index:10;white-space:nowrap;">
                     <v-autocomplete v-show="show_search" v-model="search_text" auto-select-first label="搜索" :items="this.glossary_words.concat(this.glossary_words_CN)"></v-autocomplete>
                 </span>
 
@@ -218,8 +218,8 @@
                     <span>
                         <p><br> 1. 浏览进度和单词收藏夹仅保存在本地；
                             <br> 2. 使用完毕后建议导出单词收藏夹，下次使用前再导入；
-                            <br> 3. 支持左右滑动或键盘切换单词，拼写模式下回车也可切换。
-                            <br> 4. 点击顶部箭头可以显示搜索框，再次点击收回
+                            <br> 3. 支持左右滑动或键盘切换单词，拼写模式下回车也可切换；
+                            <br> 4. 点击顶部箭头可以显示搜索框，再次点击收回。
                         </p>
                     </span>
                 </v-tooltip>
