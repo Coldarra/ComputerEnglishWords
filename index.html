@@ -125,16 +125,18 @@
             <div style="margin-top:0.1rem;color: #879298;">{{index+1}}/{{glossary.length}}
 
                 <span style="position: fixed;left:25%;right:25%;text-align:center;z-index:10;white-space:nowrap;">
-                    <v-combobox clearable v-show="show_search" v-model="search_text" auto-select-first label="搜索" :items="this.glossary_words.concat(this.glossary_words_CN)"></v-combobox>
+                    <v-expand-transition>
+                        <v-combobox clearable v-show="show_search" v-model="search_text" auto-select-first label="搜索" :items="this.glossary_words"></v-combobox>
+                    </v-expand-transition>
                 </span>
 
                 <span style="float:right">P{{glossary[index].page}}</span>
                 <!-- <v-btn icon v-if="Contains(collection,index)>=0" style="color:gold" @click="uncollect_word">
-                                        <v-icon>mdi-star</v-icon>
-                                    </v-btn>
-                                    <v-btn icon v-else @click="collect_word">
-                                        <v-icon>mdi-star</v-icon>
-                                    </v-btn> -->
+                        <v-icon>mdi-star</v-icon>
+                    </v-btn>
+                    <v-btn icon v-else @click="collect_word">
+                        <v-icon>mdi-star</v-icon>
+                    </v-btn> -->
                 <v-btn icon v-show="!show_search" @click="show_search=true">
                     <v-icon>mdi-arrow-down</v-icon>
                 </v-btn>
@@ -5755,7 +5757,7 @@
                     }
                 }
             },
-            numberSort(a, b){
+            numberSort(a, b) {
                 return a - b
             },
             GetQueryString(name) {
