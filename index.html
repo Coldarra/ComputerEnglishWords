@@ -2510,7 +2510,7 @@
         },
         {
             "word": "AirDrop",
-            "word_CN": "空投",
+            "word_CN": "隔空投送",
             "page": 202,
             "context": "A built-in network utility for ad-hoc file sharing between devices using iOS and macOS.",
             "context_CN": "内置的网络实用程序，用于使用iOS和macOS在设备之间进行即席文件共享。"
@@ -2538,7 +2538,7 @@
         },
         {
             "word": "Ethernet",
-            "word_CN": "以太网路",
+            "word_CN": "以太网",
             "page": 203,
             "context": "A popular network technology in which network nodes are connected by coaxial cable or twisted-pair wire.",
             "context_CN": "一种流行的网络技术，其中网络节点通过同轴电缆或双绞线连接。"
@@ -2579,8 +2579,8 @@
             "context_CN": "通信设备（例如路由器）使用两个通信频率的能力。"
         },
         {
-            "word": "MIMO (multiple-input multipleoutput)",
-            "word_CN": "MIMO（多输入多输出）",
+            "word": "MIMO (multiple-input multiple-output)",
+            "word_CN": "MIMO（多路输入多路输出）",
             "page": 206,
             "context": "",
             "context_CN": ""
@@ -2608,7 +2608,7 @@
         },
         {
             "word": "WEP (wired equivalent privacy)",
-            "word_CN": "WEP（有线等效隐私）",
+            "word_CN": "WEP（有线对等加密）",
             "page": 208,
             "context": "An encryption algorithm used to protect data on Wi-Fi networks.",
             "context_CN": "一种用于保护Wi-Fi网络上的数据的加密算法。"
@@ -2643,7 +2643,7 @@
         },
         {
             "word": "Bluetooth Smart",
-            "word_CN": "蓝牙智能",
+            "word_CN": "智能蓝牙",
             "page": 212,
             "context": "A low-energy version of Bluetooth deployed for devices in the Internet of Things.",
             "context_CN": "为物联网中的设备部署的低能耗版本的蓝牙。"
@@ -5745,7 +5745,7 @@
             },
             collect_word() {
                 this.collection.push(this.index);
-                this.collection.sort();
+                this.collection.sort(this.numberSort);
             },
             uncollect_word() {
                 for (let i = 0; i < this.collection.length; i++) {
@@ -5755,7 +5755,9 @@
                     }
                 }
             },
-
+            numberSort(a, b){
+                return a - b
+            },
             GetQueryString(name) {
                 const url = decodeURI(window.location.search)
                 var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
@@ -5779,7 +5781,7 @@
             pasteToCollection() {
                 try {
                     var collection = JSON.parse(this.paste_collection_text);
-                    collection.sort();
+                    collection.sort(this.numberSort);
                     this.collection = collection;
                     this.copy_collection_show = false;
                     alert("导入成功");
