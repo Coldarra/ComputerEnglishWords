@@ -50,14 +50,23 @@
 
         .toll_left {
             position: fixed;
-            left: 2%;
+            left: 0;
             bottom: 10%;
+            z-index: 10;
+        }
+
+        .toll_center {
+            position: fixed;
+            text-align: center;
+            left: 30%;
+            right: 30%;
+            bottom: 11%;
             z-index: 10;
         }
 
         .toll_right {
             position: fixed;
-            right: 2%;
+            right: 0;
             bottom: 10%;
             z-index: 10;
         }
@@ -94,13 +103,21 @@
     <v-app id="app" v-touch="{ left: () => next_word(), right: () => last_word()}">
         <div>
             <div class="toll_left">
-                <v-btn class="mx-2" fab dark color="light-blue lighten-2" @click="last_word">
-                    上一个
+                <v-btn class="mx-2" fab  color=" " @click="last_word">
+                    <v-icon>mdi-arrow-left</v-icon>
+                </v-btn>
+            </div>
+            <div class="toll_center">
+                <v-btn color="purple lighten-3" large dark v-if="Contains(collection,index)>=0" @click="uncollect_word">
+                    <v-icon >mdi-star</v-icon>已收藏
+                </v-btn>
+                <v-btn large v-else @click="collect_word">
+                    <v-icon>mdi-star</v-icon>未收藏
                 </v-btn>
             </div>
             <div class="toll_right">
-                <v-btn class="mx-2" fab dark color="light-blue lighten-2" @click="next_word">
-                    下一个
+                <v-btn class="mx-2" fab  color=" " @click="next_word">
+                    <v-icon>mdi-arrow-right</v-icon>
                 </v-btn>
             </div>
             <v-content id="content">
@@ -117,19 +134,19 @@
                     </span>
                 </div>
                 <div style="margin-top:0.5rem;" class="ce_subtitle">词汇表 第{{index+1}}个 教材第{{glossary[index].page}}页
-                    <v-btn icon v-if="Contains(collection,index)>=0" style="color:gold" @click="uncollect_word">
+                    <!-- <v-btn icon v-if="Contains(collection,index)>=0" style="color:gold" @click="uncollect_word">
                         <v-icon>mdi-star</v-icon>
                     </v-btn>
                     <v-btn icon v-else @click="collect_word">
                         <v-icon>mdi-star</v-icon>
-                    </v-btn>
+                    </v-btn> -->
                 </div>
-                <div class="ce_subtitle">
+                <div style="margin-top:0.5rem;" class="ce_subtitle">
                     <v-btn color="purple lighten-2" text @click="show_spell = !show_spell">{{show_spell?"拼写模式":"背词模式"}}
                     </v-btn>
                     <v-btn color="purple lighten-2" text @click="random = !random">{{random?"随机模式":"顺序模式"}}
                     </v-btn>
-                    <v-btn color="purple lighten-2" text @click="show_collection = !show_collection">{{show_collection?"只看收藏":"全部单词"}}
+                    <v-btn :color="show_collection?'amber':'purple lighten-2'" text @click="show_collection = !show_collection">{{show_collection?"只看收藏":"全部单词"}}
                     </v-btn>
                 </div>
 
@@ -218,7 +235,7 @@
                 <v-card>
                     <v-card-title>导入到收藏夹</v-card-title>
                     <v-card-text>
-                        <v-textarea type="text" v-model="paste_collection_text"></v-textarea>
+                        <v-textarea filled type="text" v-model="paste_collection_text"></v-textarea>
                         <div style="color: #879298;">导出请手动复制&nbsp;&nbsp;导入将覆盖已有收藏夹</div>
                     </v-card-text>
                     <v-card-actions>
@@ -2022,7 +2039,7 @@
         },
         {
             "word": "broadband",
-            "word_CN": "宽频",
+            "word_CN": "宽带",
             "page": 165,
             "context": "A term used to refer to communications channels that have bandwidth that equals or exceeds",
             "context_CN": "用于指带宽等于或超过带宽的通信信道的术语"
@@ -2274,7 +2291,7 @@
         },
         {
             "word": "private IP address",
-            "word_CN": "专用IP地址",
+            "word_CN": "私有IP地址",
             "page": 180,
             "context": "An IP address that cannot be routed over the Internet.",
             "context_CN": "无法通过Internet路由的IP地址。"
@@ -2358,7 +2375,7 @@
         },
         {
             "word": "latency",
-            "word_CN": "潜伏",
+            "word_CN": "延迟",
             "page": 188,
             "context": "The elapsed time it takes for a packet of data to arrive at its destination.",
             "context_CN": "数据包到达其目的地所花费的时间。"
