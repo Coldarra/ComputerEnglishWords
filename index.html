@@ -5933,7 +5933,7 @@
         created: function () {
             var _this = this;
             document.onkeydown = function (e) {
-                if (_this.show_spell || _this.show_note_edit) {
+                if (_this.show_spell || _this.copy_collection_show || _this.copy_note_show || _this.show_note_edit) {
                     return
                 }
                 let key = window.event.keyCode;
