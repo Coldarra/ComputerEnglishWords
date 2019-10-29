@@ -125,7 +125,7 @@
             <div style="margin-top:0.1rem;color: #879298;">{{index+1}}/{{glossary.length}}
 
                 <span style="position: fixed;left:25%;right:25%;text-align:center;z-index:10;white-space:nowrap;">
-                    <v-autocomplete v-show="show_search" v-model="search_text" auto-select-first label="搜索" :items="this.glossary_words.concat(this.glossary_words_CN)"></v-autocomplete>
+                    <v-combobox clearable v-show="show_search" v-model="search_text" auto-select-first label="搜索" :items="this.glossary_words.concat(this.glossary_words_CN)"></v-combobox>
                 </span>
 
                 <span style="float:right">P{{glossary[index].page}}</span>
@@ -216,29 +216,16 @@
                         <div v-on="on">使用说明</div>
                     </template>
                     <span>
-                        <p><br> 1. 浏览进度和单词收藏夹仅保存在本地；
+                        <p>
+                            <br> 1. 浏览进度和单词收藏夹仅保存在本地；
                             <br> 2. 使用完毕后建议导出单词收藏夹，下次使用前再导入；
-                            <br> 3. 支持左右滑动或键盘切换单词，拼写模式下回车也可切换；
+                            <br> 3. 支持左右滑动或键盘切换单词或拼写模式回车切换；
                             <br> 4. 点击顶部箭头可以显示搜索框，再次点击收回。
                         </p>
                     </span>
                 </v-tooltip>
             </div>
 
-            <!-- <v-dialog v-model="copy_collection_show" width="500">
-                <v-card>
-                    <v-card-title>单词收藏夹</v-card-title>
-                    <v-card-text>{{collection}}</v-card-text>
-                    <v-card-actions>
-                        <v-btn text color="deep-purple accent-4" disabled @click="alert('请手动复制')">
-                            请手动复制
-                        </v-btn>
-                        <v-btn text color="deep-purple accent-4" @click="paste_collection_show = true">
-                            导入到收藏夹
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog> -->
             <v-dialog v-model="copy_collection_show" width="500">
                 <v-card>
                     <v-card-title>导入到收藏夹</v-card-title>
@@ -5689,7 +5676,7 @@
                 glossary: glossary,
                 glossary_words: [],
                 glossary_words_CN: [],
-                search_text: "",
+                search_text: undefined,
                 show_search: false,
                 index: -1,
                 quantity: 10,
@@ -5702,7 +5689,6 @@
                 collection: [],
                 copy_collection_show: false,
                 paste_collection_text: "",
-                paste_collection_show: false,
                 loading: false,
                 spell_text: "",
                 spell_success: false,
@@ -5796,7 +5782,6 @@
                     collection.sort();
                     this.collection = collection;
                     this.copy_collection_show = false;
-                    this.paste_collection_show = false;
                     alert("导入成功");
                 } catch (error) {
                     alert("导入失败 (" + error + ")");
@@ -5817,9 +5802,9 @@
             },
             index() {
                 this.index_history.push(this.index);
-                this.spell_text = "";
                 localStorage.setItem("index", this.index);
-                this.search_text = "";
+                this.spell_text = "";
+                this.search_text = undefined;
             },
             collection() {
                 localStorage.setItem("collection", JSON.stringify(this.collection));
@@ -5835,6 +5820,7 @@
                 if (index) {
                     this.index = Number(this.search_text.substring(0, index)) - 1;
                     // this.search_text = "";
+                    this.show_search = false;
                 }
 
             }
@@ -5862,7 +5848,6 @@
                     }
                 }
             }, 1000);
-            console.log(this.glossary_words);
 
             glossary.forEach((e, index) => {
                 var word = (index + 1) + ". [" + e.word + "] " + e.word_CN; // + " P"+ e.page
