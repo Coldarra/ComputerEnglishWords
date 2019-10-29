@@ -268,14 +268,6 @@
                     <v-card-text>
                         <v-textarea filled type="text" v-model="notes[index]"></v-textarea>
                     </v-card-text>
-                    <!-- <v-card-actions>
-                        <v-btn text color="deep-purple accent-4" @click="">
-                            确定
-                        </v-btn>
-                        <v-btn text color="deep-purple accent-4" @click="copy_collection_show = false">
-                            取消
-                        </v-btn>
-                    </v-card-actions> -->
                 </v-card>
             </v-dialog>
             <!-- {{index_history}} -->
@@ -5908,7 +5900,7 @@
         created: function () {
             var _this = this;
             document.onkeydown = function (e) {
-                if (_this.show_spell) {
+                if (_this.show_spell || _this.show_note_edit) {
                     return
                 }
                 let key = window.event.keyCode;
