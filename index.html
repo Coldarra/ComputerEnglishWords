@@ -93,6 +93,8 @@
             bottom: 0;
             color: #879298;
             z-index: 100;
+
+
         }
     </style>
 
@@ -102,26 +104,37 @@
 <body>
     <v-app id="app" v-touch="{ left: () => next_word(), right: () => last_word()}">
         <div>
+
             <div class="toll_left">
-                <v-btn class="mx-2" fab  color=" " @click="last_word">
+                <v-btn class="mx-2" fab color=" " @click="last_word">
                     <v-icon>mdi-arrow-left</v-icon>
                 </v-btn>
             </div>
             <div class="toll_center">
                 <v-btn color="purple lighten-3" large dark v-if="Contains(collection,index)>=0" @click="uncollect_word">
-                    <v-icon >mdi-star</v-icon>已收藏
+                    <v-icon>mdi-star</v-icon>已收藏
                 </v-btn>
                 <v-btn large v-else @click="collect_word">
                     <v-icon>mdi-star</v-icon>未收藏
                 </v-btn>
             </div>
             <div class="toll_right">
-                <v-btn class="mx-2" fab  color=" " @click="next_word">
+                <v-btn class="mx-2" fab color=" " @click="next_word">
                     <v-icon>mdi-arrow-right</v-icon>
                 </v-btn>
             </div>
+
+            <div style="margin-top:0.1rem;color: #879298;">{{index+1}}/{{glossary.length}}<span style="float:right">P{{glossary[index].page}}</span>
+                <!-- <v-btn icon v-if="Contains(collection,index)>=0" style="color:gold" @click="uncollect_word">
+                                        <v-icon>mdi-star</v-icon>
+                                    </v-btn>
+                                    <v-btn icon v-else @click="collect_word">
+                                        <v-icon>mdi-star</v-icon>
+                                    </v-btn> -->
+            </div>
+
             <v-content id="content">
-                <div class="ce" style="margin-top:2.5rem;"><span class="ce_title">
+                <div class="ce" style="margin-top:1.6rem;"><span class="ce_title">
                         <div>
                             <div v-show="!show_spell" class="">
                                 {{glossary[index].word}}
@@ -132,14 +145,6 @@
 
                         </div>
                     </span>
-                </div>
-                <div style="margin-top:0.5rem;" class="ce_subtitle">词汇表 第{{index+1}}个 教材第{{glossary[index].page}}页
-                    <!-- <v-btn icon v-if="Contains(collection,index)>=0" style="color:gold" @click="uncollect_word">
-                        <v-icon>mdi-star</v-icon>
-                    </v-btn>
-                    <v-btn icon v-else @click="collect_word">
-                        <v-icon>mdi-star</v-icon>
-                    </v-btn> -->
                 </div>
                 <div style="margin-top:0.5rem;" class="ce_subtitle">
                     <v-btn color="purple lighten-2" text @click="show_spell = !show_spell">{{show_spell?"拼写模式":"背词模式"}}
