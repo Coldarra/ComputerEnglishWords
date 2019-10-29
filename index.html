@@ -5752,6 +5752,7 @@
         methods: {
             submit() { },
             next_word() {
+                if (this.copy_collection_show || this.copy_note_show || this.show_note_edit) return;
                 const original_index = this.index;
                 this.spell_success = false;
                 if (this.show_collection) {
@@ -5776,6 +5777,7 @@
                 }
             },
             last_word() {
+                if (this.copy_collection_show || this.copy_note_show || this.show_note_edit) return;
                 this.index_history.pop();
                 var last_index = this.index_history.pop();
                 //TODO: 重复记录
@@ -5823,6 +5825,7 @@
             copyText(text) {
                 document.execCommand(text);
             },
+
             pasteToCollection() {
                 try {
                     var collection = JSON.parse(this.paste_collection_text);
