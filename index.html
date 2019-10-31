@@ -5265,7 +5265,7 @@
         },
         {
             "word": "von Neumann architecture",
-            "word_CN": "来自Neumann建筑",
+            "word_CN": "冯·诺依曼体系结构",
             "page": 542,
             "context": "The concept that computer memory can hold both programs and data.",
             "context_CN": "计算机内存可以容纳程序和数据的概念。"
@@ -5313,18 +5313,18 @@
             "context_CN": "由Digital Equipment Corp.建造并于1965年推出；第一台商业上成功的微型计算机。"
         },
         {
-            "word": "fourth-generation computers",
-            "word_CN": "第四代计算机",
-            "page": 546,
-            "context": "Computers, such as today's personal computers, servers, and mainframes, that use a generalpurpose microprocessor for data processing.",
-            "context_CN": "使用通用微处理器进行数据处理的计算机，例如当今的个人计算机，服务器和大型机。"
-        },
-        {
             "word": "third-generation computers",
             "word_CN": "第三代计算机",
             "page": 546,
             "context": "Computers characterized by using integrated circuits instead of transistors or vacuum tubes for data processing.",
             "context_CN": "计算机的特征在于使用集成电路代替晶体管或真空管进行数据处理。"
+        },
+        {
+            "word": "fourth-generation computers",
+            "word_CN": "第四代计算机",
+            "page": 546,
+            "context": "Computers, such as today's personal computers, servers, and mainframes, that use a generalpurpose microprocessor for data processing.",
+            "context_CN": "使用通用微处理器进行数据处理的计算机，例如当今的个人计算机，服务器和大型机。"
         },
         {
             "word": "Apple I",
@@ -5936,7 +5936,7 @@
         created: function () {
             var _this = this;
             document.onkeydown = function (e) {
-                if (_this.show_spell || _this.copy_collection_show || _this.copy_note_show || _this.show_note_edit) {
+                if (_this.show_spell || _this.show_search || _this.copy_collection_show || _this.copy_note_show || _this.show_note_edit) {
                     return
                 }
                 let key = window.event.keyCode;
