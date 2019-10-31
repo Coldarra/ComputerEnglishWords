@@ -26,7 +26,7 @@
 
         .ce_title {
             color: #6539D6;
-            font-size: 1.8rem;
+            font-size: 2rem;
         }
 
         .ce_subtitle {
@@ -223,7 +223,7 @@
                 </v-tooltip>
             </div>
             <div class="explanationleft">
-                <div @click="copy_collection_show=true">收藏夹</div>
+                <div @click="copy_collection_show=true">收藏夹({{collection.length}})</div>
                 <v-tooltip top>
                     <template v-slot:activator="{ on }">
                         <div v-on="on">使用说明</div>
@@ -3479,8 +3479,8 @@
             "context_CN": "在Twitter上，一种用于引用推文正文中的任何用户的方法。"
         },
         {
-            "word": "@username,",
-            "word_CN": "@用户名，",
+            "word": "@username",
+            "word_CN": "@用户名",
             "page": 339,
             "context": "",
             "context_CN": ""
@@ -3553,21 +3553,21 @@
             "word_CN": "NOR",
             "page": 340,
             "context": "A Wikipedia policy that means \"no original research.\" All material must be backed by references.",
-            "context_CN": ""
+            "context_CN": "维基百科的一项政策，意味着“没有原创研究”。所有材料都必须有参考文献作为后盾。"
         },
         {
             "word": "NPOV",
             "word_CN": "NPOV",
             "page": 340,
             "context": "A Wikipedia policy that means \"neutral point of view.\"",
-            "context_CN": "Wikipedia政策，意思是“中立的观点”。"
+            "context_CN": "维基百科的一项政策，意思是“中立的观点”。"
         },
         {
-            "word": "V",
-            "word_CN": "V",
+            "word": "Vector",
+            "word_CN": "矢量",
             "page": 340,
-            "context": "ctor Lines and curves that form simple shapes.",
-            "context_CN": "ctor形成简单形状的线和曲线。"
+            "context": "Lines and curves that form simple shapes.",
+            "context_CN": "形成简单形状的线和曲线。"
         },
         {
             "word": "wiki",
@@ -3627,7 +3627,7 @@
         },
         {
             "word": "Webmail",
-            "word_CN": "企业邮局",
+            "word_CN": "网页邮件",
             "page": 347,
             "context": "An email system that allows users to access email messages using a browser.",
             "context_CN": "一种允许用户使用浏览器访问电子邮件的电子邮件系统。"
@@ -3676,14 +3676,14 @@
         },
         {
             "word": "VoIP (Voice over Internet Protocol)",
-            "word_CN": "VoIP（互联网协议语音）",
+            "word_CN": "VoIP（IP电话）",
             "page": 352,
             "context": "Hardware, software, and protocols used to make telephone-style calls over the Internet. Also referred to as Internet telephony.",
             "context_CN": "用于通过Internet进行电话式呼叫的硬件，软件和协议。也称为互联网电话。"
         },
         {
             "word": "sockpuppets",
-            "word_CN": "袜子",
+            "word_CN": "马甲",
             "page": 355,
             "context": "Fake online personas often used to bolster someone's real online presence.",
             "context_CN": "伪造的在线角色通常用来增强某人的真实在线形象。"
@@ -3728,11 +3728,11 @@
             "word_CN": "冒充",
             "page": 357,
             "context": "Pretending to be someone you are not.",
-            "context_CN": "假装自己不是别人。"
+            "context_CN": "假装自己是另一个人。"
         },
         {
             "word": "online reputation",
-            "word_CN": "在线声誉",
+            "word_CN": "网络声誉",
             "page": 357,
             "context": "The perception formed by third parties of a person's online identity.",
             "context_CN": "第三方对一个人的在线身份的感知。"
@@ -4019,7 +4019,7 @@
         },
         {
             "word": "macOS",
-            "word_CN": "MACOS",
+            "word_CN": "macOS",
             "page": 398,
             "context": "An operating system used on Apple desktop and laptop computers; formerly OS X.",
             "context_CN": "苹果台式机和笔记本电脑上使用的操作系统；以前是OSX。"
@@ -4117,7 +4117,7 @@
         },
         {
             "word": "rooting",
-            "word_CN": "生根",
+            "word_CN": "rooting",
             "page": 408,
             "context": "A process that enables users to gain root access to Android mobile devices with the purpose of overcoming limitations imposed by mobile service providers.",
             "context_CN": "一种过程，使用户能够获得对Android移动设备的root访问权限，目的是克服移动服务提供商施加的限制。"
@@ -4250,21 +4250,21 @@
         },
         {
             "word": "fully justified",
-            "word_CN": "有充分理由",
+            "word_CN": "分散对齐",
             "page": 418,
             "context": "The horizontal alignment of text where the text terminates exactly at both margins of the document.",
             "context_CN": "文本的水平对齐方式，其中文本恰好在文档的两个边缘处终止。"
         },
         {
             "word": "header",
-            "word_CN": "标头",
+            "word_CN": "页眉",
             "page": 418,
             "context": "Text that is placed in the top margin of each page of a document.",
             "context_CN": "放置在文档每页顶部的文本。"
         },
         {
             "word": "leading",
-            "word_CN": "lead行距ing",
+            "word_CN": "行距",
             "page": 418,
             "context": "Also called line spacing; the vertical spacing between lines of text.",
             "context_CN": "也称为line spacing；文本行之间的垂直间距。"
@@ -4285,7 +4285,7 @@
         },
         {
             "word": "paragraph style",
-            "word_CN": "款式",
+            "word_CN": "段落格式",
             "page": 418,
             "context": "A specification for the format of a paragraph that includes the alignment of text within the margins and line spacing.",
             "context_CN": "段落格式的规范，包括在页边距和行距内的文本对齐方式。"
@@ -4355,7 +4355,7 @@
         },
         {
             "word": "formula",
-            "word_CN": "式",
+            "word_CN": "公式",
             "page": 420,
             "context": "In spreadsheet terminology, a combination of numbers and symbols that tells the computer how to use the contents of cells in calculations.",
             "context_CN": "在电子表格术语中，数字和符号的组合告诉计算机如何在计算中使用单元格的内容。"
@@ -4369,7 +4369,7 @@
         },
         {
             "word": "function",
-            "word_CN": "功能",
+            "word_CN": "函数",
             "page": 421,
             "context": "(1) In the context of spreadsheet software, a built-in formula for making a calculation.",
             "context_CN": "（1）在电子表格软件的上下文中，是用于进行计算的内置公式。"
@@ -4467,7 +4467,7 @@
         },
         {
             "word": "folder",
-            "word_CN": "夹",
+            "word_CN": "文件夹",
             "page": 429,
             "context": "The subdirectories, or subdivisions of a directory, that can contain files or other folders.",
             "context_CN": "目录的子目录或子分区，可以包含文件或其他文件夹。"
@@ -4488,7 +4488,7 @@
         },
         {
             "word": "file management utilities",
-            "word_CN": "文件管理实用程序",
+            "word_CN": "文件管理程序",
             "page": 430,
             "context": "Software, such as Finder and File Explorer, that helps users locate, rename, move, copy, and delete files.",
             "context_CN": "Finder和File Explorer等软件可帮助用户查找，重命名，移动，复制和删除文件。"
@@ -4607,7 +4607,7 @@
         },
         {
             "word": "two-factor authentication",
-            "word_CN": "两因素认证",
+            "word_CN": "双重认证",
             "page": 456,
             "context": "The use of two identity validators, such as a password and a code sent to the user's cell phone.",
             "context_CN": "使用两个身份验证器，例如密码和发送到用户手机的密码。"
@@ -4621,7 +4621,7 @@
         },
         {
             "word": "brute force attack",
-            "word_CN": "蛮力攻击",
+            "word_CN": "暴力攻击",
             "page": 460,
             "context": "A method of accessing encrypted data by trying all possible encryption keys.",
             "context_CN": "通过尝试所有可能的加密密钥来访问加密数据的方法。"
@@ -5160,7 +5160,7 @@
         },
         {
             "word": "GDP",
-            "word_CN": "国内生产总值",
+            "word_CN": "国内生产总值（Gross Domestic Product）",
             "page": 533,
             "context": "A measure of the total economic performance of a country or municipality.",
             "context_CN": "一个国家或市镇的总体经济绩效的度量。"
@@ -5216,7 +5216,7 @@
         },
         {
             "word": "Pascaline",
-            "word_CN": "帕斯卡利娜",
+            "word_CN": "Pascaline",
             "page": 538,
             "context": "An early mechanical calculator capable of performing addition, subtraction, division, and multiplication.",
             "context_CN": "能够执行加，减，除和乘运算的早期机械计算器。"
@@ -5244,7 +5244,7 @@
         },
         {
             "word": "Colossus",
-            "word_CN": "巨人",
+            "word_CN": "Colossus",
             "page": 541,
             "context": "An early electronic computer prototype that used binary data representation and was operated during WWII to decode messages encrypted by the german ENIgMA device.",
             "context_CN": "早期的电子计算机原型使用二进制数据表示形式，并在第二次世界大战期间运行，以解码由德国ENIgMA设备加密的消息。"
@@ -5344,8 +5344,8 @@
             "word": "MITS Altair",
             "word_CN": "MITS Altair",
             "page": 547,
-            "context": "The first commercial microcomputer. It was based on the Intel",
-            "context_CN": "第一台商用微型计算机。它基于英特尔"
+            "context": "The first commercial microcomputer. It was based on the Intel 8080 processor and sold primarily to computer hobbyists.",
+            "context_CN": "第一台商用微型计算机。它基于英特尔8080处理器，主要卖给电脑爱好者"
         },
         {
             "word": "Apple II",
@@ -5356,7 +5356,7 @@
         },
         {
             "word": "Apple Lisa",
-            "word_CN": "苹果丽莎",
+            "word_CN": "苹果Lisa",
             "page": 548,
             "context": "A personal computer system, developed and manufactured by Apple Computer Inc., that featured one of the first graphical user interfaces.",
             "context_CN": "由Apple Computer Inc.开发和制造的个人计算机系统，具有最早的图形用户界面之一。"
