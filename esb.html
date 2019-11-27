@@ -176,7 +176,7 @@
                     <v-expansion-panels accordion multiple v-model="panel" style="margin-top:0.5rem">
                         <v-expansion-panel>
                             <v-expansion-panel-header>
-                                {{question[index].type}}</v-expansion-panel-header>
+                                {{question[index].type}} {{question[index].level>0?"⭐️":""}} {{question[index].ppt?"🌹":""}}</v-expansion-panel-header>
                             <v-expansion-panel-content>
                                 {{question[index].question.replace(/#/g, "").replace(/★/g, "")}}
                                 <!-- <v-btn icon @click="show_note_edit=true">
@@ -238,11 +238,8 @@
                     </template>
                     <span>
                         <p>
-                            <br> 1. 浏览进度和题目收藏夹仅保存在本地；
-                            <br> 2. 使用完毕后建议导出题目收藏夹，下次使用前再导入；
-                            <br> 3. 支持左右滑动或键盘切换题目；
-                            <br> 4. 点击顶部箭头可以显示搜索框，再次点击收回；
-                            <br> 5. 笔记自动保存，清空即为删除。
+                            <br> 1. 🌹：复习PPT中出现过该知识点；
+                            <br> 2. ⭐️：该题目在历年试卷中曾多次出现；
                         </p>
                     </span>
                 </v-tooltip>
