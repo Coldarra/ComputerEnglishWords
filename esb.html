@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<!-- 源码开放，尽情查阅  -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/5.10.0-12/css/all.css"> -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/vuetify/2.0.10/vuetify.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/MaterialDesign-Webfont/4.1.95/css/materialdesignicons.css">
+    <!-- <link href="https://cdn.staticfile.org/element-ui/2.11.1/theme-chalk/index.css" rel="stylesheet"> -->
+    <title>题库-嵌入式系统</title>
+    <style lang="scss">
+        #app {
+            background-image: url("http://cdn.clodia.cn/app-sign-up.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: scroll;
+            background-position: center top;
+        }
+
+        .v-btn:hover:before {
+            opacity: 0 !important;
+        }
+
+        .ce {
+            text-align: left;
+        }
+
+        .ce_title {
+            color: #6539D6;
+            font-size: 1.3rem;
+        }
+
+        .ce_subtitle {
+            color: #879298;
+            text-align: center;
+        }
+
+        .ce_form {
+            margin-left: 20%;
+            margin-right: 20%;
+        }
+
+        .ce_form input {
+            text-align: center;
+        }
+
+        .ce_button {
+            text-align: center;
+            /* font-size: 1rem !important; */
+        }
+
+        .toll_left {
+            position: fixed;
+            left: 0;
+            bottom: 10%;
+            z-index: 10;
+        }
+
+        .toll_center {
+            position: fixed;
+            text-align: center;
+            left: 30%;
+            right: 30%;
+            bottom: 11%;
+            z-index: 10;
+        }
+
+        .toll_right {
+            position: fixed;
+            right: 0;
+            bottom: 10%;
+            z-index: 10;
+        }
+
+        .copyright {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            color: #879298;
+            z-index: 100;
+        }
+
+        .explanationleft {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            color: #879298;
+            z-index: 100;
+        }
+
+        .collection {
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            color: #879298;
+            z-index: 100;
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <v-app id="app" v-touch="{ left: () => next_question(), right: () => last_question()}">
+        <div>
+
+            <div class="toll_left">
+                <v-btn class="mx-2" fab color=" " @click="last_question">
+                    <v-icon>mdi-arrow-left</v-icon>
+                </v-btn>
+            </div>
+            <div class="toll_center">
+                <v-btn color="purple lighten-3" large dark v-if="collection.indexOf(index)>-1" @click="uncollect_question">
+                    <v-icon>mdi-star</v-icon>已收藏
+                </v-btn>
+                <v-btn large v-else @click="collect_question">
+                    <v-icon>mdi-star</v-icon>未收藏
+                </v-btn>
+            </div>
+            <div class="toll_right">
+                <v-btn class="mx-2" fab color=" " @click="next_question">
+                    <v-icon>mdi-arrow-right</v-icon>
+                </v-btn>
+            </div>
+
+            <div style="margin-top:0.1rem;color: #879298;">{{index+1}}/{{question.length}}
+
+                <span style="position: fixed;left:25%;right:25%;text-align:center;z-index:10;white-space:nowrap;">
+                    <v-expand-transition>
+                        <v-combobox clearable v-show="show_search" v-model="search_text" auto-select-first label="搜索" :items="this.question_questions"></v-combobox>
+                    </v-expand-transition>
+                </span>
+
+                <!-- <span style="float:right">P{{question[index].page}}</span> -->
+                <!-- <v-btn icon v-if="Contains(collection,index)>=0" style="color:gold" @click="uncollect_question">
+                        <v-icon>mdi-star</v-icon>
+                    </v-btn>
+                    <v-btn icon v-else @click="collect_question">
+                        <v-icon>mdi-star</v-icon>
+                    </v-btn> -->
+                <v-btn icon v-show="!show_search" @click="show_search=true">
+                    <v-icon>mdi-arrow-down</v-icon>
+                </v-btn>
+                <v-btn icon v-show="show_search" @click="show_search=false">
+                    <v-icon>mdi-arrow-up</v-icon>
+                </v-btn>
+            </div>
+
+            <v-content id="content">
+                <!-- <div v-show="!show_spell" class="ce" style="margin-top:0.5rem;">
+                    <span class="ce_title">
+                        {{question[index].question.replace(/#/g, "").replace(/★/g, "")}}
+                    </span>
+                </div> -->
+                <div v-show="show_spell" class="ce" style="margin-top:1.6rem;">
+                    <span class="ce_title">
+                        <div v-show="show_spell" style="margin-left:10%;margin-right:10%;">
+                            <v-text-field id="input" type="text" v-model="spell_text" label="拼写" :success="spell_success" @keyup.enter="next_question">
+                        </div>
+                    </span>
+                </div>
+
+                <div style="margin-top:0.5rem;" class="ce_subtitle">
+                    <!-- <v-btn color="purple lighten-2" text @click="show_spell = !show_spell">{{show_spell?"拼写模式":"背词模式"}}
+                    </v-btn> -->
+                    <v-btn color="purple lighten-2" text @click="random = !random">{{random?"随机模式":"顺序模式"}}
+                    </v-btn>
+                    <v-btn :color="show_collection?'amber':'purple lighten-2'" text @click="show_collection = !show_collection">{{show_collection?"只看收藏":"全部题目"}}
+                    </v-btn>
+                </div>
+                <div style="margin-top:0.5rem;margin-left:10%;margin-right:10%;">
+
+                    <v-expansion-panels accordion multiple v-model="panel" style="margin-top:0.5rem">
+                        <v-expansion-panel>
+                            <v-expansion-panel-header>
+                                {{question[index].type}}</v-expansion-panel-header>
+                            <v-expansion-panel-content>
+                                {{question[index].question.replace(/#/g, "").replace(/★/g, "")}}
+                                <!-- <v-btn icon @click="show_note_edit=true">
+                                    <v-icon color="#879298">mdi-pencil-circle-outline</v-icon>
+                                </v-btn> -->
+                            </v-expansion-panel-content>
+                        </v-expansion-panel>
+                        <v-expansion-panel v-show="question[index].type=='选择'">
+                            <v-expansion-panel-header>
+                                选项</v-expansion-panel-header>
+                            <v-expansion-panel-content>
+                                <div v-for="option in question[index].options">{{option}}</div>
+
+                            </v-expansion-panel-content>
+                        </v-expansion-panel>
+                        <!-- <v-expansion-panel v-show="notes[index]">
+                            <v-expansion-panel-header>
+                                我的笔记</v-expansion-panel-header>
+                            <v-expansion-panel-content>
+                                {{notes[index]}}
+                            </v-expansion-panel-content>
+                        </v-expansion-panel> -->
+                        <v-expansion-panel>
+                            <v-expansion-panel-header>
+                                答案</v-expansion-panel-header>
+                            <v-expansion-panel-content>
+                                <div v-for="ans in question[index].answer.split('\n')">{{ans}}</div>
+
+                                <!-- {{question[index].answer}} -->
+                            </v-expansion-panel-content>
+                        </v-expansion-panel>
+
+                    </v-expansion-panels>
+
+                    <!-- {{index_history}} -->
+            </v-content>
+            <div class="copyright">
+                <div style="text-align:right" @click="copy_note_show=true">笔记</div>
+                <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                        <div v-on="on">
+                            &copy;zhengyiming cs161.cn
+                        </div>
+                    </template>
+                    <span>
+                        <p>
+                            <span v-for="(item,i) in update_log" :key="i">
+                                <br>{{item[0]}}: {{item[1]}} {{item[2]?"("+item[2]+")":""}}
+                            </span>
+                        </p>
+                    </span>
+                </v-tooltip>
+            </div>
+            <div class="explanationleft">
+                <div @click="copy_collection_show=true">收藏夹({{collection.length}})</div>
+                <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                        <div v-on="on">使用说明</div>
+                    </template>
+                    <span>
+                        <p>
+                            <br> 1. 浏览进度和题目收藏夹仅保存在本地；
+                            <br> 2. 使用完毕后建议导出题目收藏夹，下次使用前再导入；
+                            <br> 3. 支持左右滑动或键盘切换题目；
+                            <br> 4. 点击顶部箭头可以显示搜索框，再次点击收回；
+                            <br> 5. 笔记自动保存，清空即为删除。
+                        </p>
+                    </span>
+                </v-tooltip>
+            </div>
+
+            <v-dialog v-model="copy_collection_show" width="500">
+                <v-card>
+                    <v-card-title>导入到收藏夹</v-card-title>
+                    <v-card-text>
+                        <v-textarea filled type="text" v-model="paste_collection_text"></v-textarea>
+                        <div style="color: #879298;">导出请手动复制&nbsp;&nbsp;导入将覆盖已有收藏夹</div>
+                    </v-card-text>
+                    <v-card-actions>
+                        <!-- <v-btn text color="deep-purple accent-4" disabled @click="alert('请手动复制')">
+                             导出请手动复制
+                        </v-btn>
+                        <v-btn text color="deep-purple accent-4" disabled @click="alert('导入将覆盖已有收藏夹')">
+                            导入将覆盖已有收藏夹
+                        </v-btn> -->
+                        <v-btn text color="deep-purple accent-4" @click="pasteToCollection">
+                            确定导入
+                        </v-btn>
+                        <v-btn text color="deep-purple accent-4" @click="copy_collection_show=false">
+                            取消
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+            <v-dialog v-model="copy_note_show" width="500">
+                <v-card>
+                    <v-card-title>导入个人笔记</v-card-title>
+                    <v-card-text>
+                        <v-textarea filled type="text" v-model="paste_note_text"></v-textarea>
+                        <div style="color: #879298;">导出请手动复制&nbsp;&nbsp;导入将覆盖已有笔记</div>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn text color="deep-purple accent-4" @click="pasteToNotes">
+                            确定导入
+                        </v-btn>
+                        <v-btn text color="deep-purple accent-4" @click="copy_note_show=false">
+                            取消
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+            <v-dialog v-model="show_note_edit" width="500">
+                <v-card>
+                    <v-card-title>添加笔记</v-card-title>
+                    <v-card-text>
+                        <v-textarea filled type="text" v-model="notes[index]"></v-textarea>
+                    </v-card-text>
+                </v-card>
+            </v-dialog>
+            <!-- {{index_history}} -->
+            </div>
+    </v-app>
+</body>
+<script src="https://cdn.staticfile.org/vue/2.6.10/vue.min.js"></script>
+<script src="https://cdn.staticfile.org/vuetify/2.0.10/vuetify.js"></script>
+<!-- <script src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js"></script> -->
+<!-- <script src="https://cdn.staticfile.org/element-ui/2.11.1/index.js"></script> -->
+<!-- <script src="https://cdn.staticfile.org/element-ui/2.11.1/locale/zh-CN.min.js"></script> -->
+
+<script>
+    const question = [{ "question": "模块的手动安装和卸载命令分别是（    ）。 ★#", "type": "填空", "answer": "insmod  和  rmmod  ", "level": 1, "ppt": true, "index": 0 }, { "question": "Linux操作系统包括四部分：（    ）。★", "type": "填空", "answer": "应用系统 、Shell、文件系统、内核 ", "level": 1, "ppt": false, "index": 1 }, { "question": "Linux映像(image)文件结构包括：（    ）。", "type": "填空", "answer": "Linux内核（Kernel）映像 和 Linux文件系统映像", "level": 0, "ppt": false, "index": 2 }, { "question": "Linux下Makefile的默认命名包括：（    ）。★#", "type": "填空", "answer": "GNUmakefile、makefile、Makefile", "level": 1, "ppt": true, "index": 3 }, { "question": "Linux进程的创建需要使用三个系统调用 （    ） 。#", "type": "填空", "answer": "sysfork、sysvfork、sysclone", "level": 0, "ppt": true, "index": 4 }, { "question": "每一种外设的访问都是通过读写设备上的寄存器来进行，包括（    ）三大类。", "type": "填空", "answer": "控制寄存器、状态寄存器、数据寄存器", "level": 0, "ppt": false, "index": 5 }, { "question": "嵌入式系统一般由（    ）四个部分组成。★#", "type": "填空", "answer": "嵌入式微处理器、嵌入式外围硬件设备、嵌入式操作系统、嵌入式应用软件", "level": 1, "ppt": true, "index": 6 }, { "question": "Linux文件的权限，分为三段，其属主包括：（    ） 。★", "type": "填空", "answer": "所有者(u) 、同组人(g)、其它人(o)", "level": 1, "ppt": false, "index": 7 }, { "question": "两条独立控制设备驱动的途径包括：（    ）。#", "type": "填空", "answer": "通过设备驱动的接口、通过文件管理器接口", "level": 0, "ppt": true, "index": 8 }, { "question": "Android程序用到的字符串资源需要在 （    ） 中定义；在其他资源文件中采用 （    ） 的形式访问。★", "type": "填空", "answer": "\"res/values/strings.xml\" \"@string/资源名称\"", "level": 1, "ppt": false, "index": 9 }, { "question": "vi编辑器有三种模式，分别是：（    ） 。★#", "type": "填空", "answer": "命令模式、插入模式和末行模式", "level": 1, "ppt": true, "index": 10 }, { "question": "进程的销毁包括三个事件驱动，分别是（    ）。#", "type": "填空", "answer": "正常的进程结束、信号和exit函数的调用", "level": 0, "ppt": true, "index": 11 }, { "question": "影响Linux内存管理的两个方面是：Linux操作系统的 （    ）。★#", "type": "填空", "answer": "内存管理 和 MMU", "level": 1, "ppt": true, "index": 12 }, { "question": "Makefile中的依赖关系由 （    ） 组成。#", "type": "填空", "answer": "一个目标 和 一组该目标所依赖的源文件", "level": 0, "ppt": true, "index": 13 }, { "question": "嵌入式Linux的版本号由三组数字组成，分别是：（    ） 。", "type": "填空", "answer": "主版本号（Major Number）、次版本号（Minor Number）和 补丁号（Patchlevel）", "level": 0, "ppt": false, "index": 14 }, { "question": "Linux的系统调用，在x86处理器上通过 （    ） 实现的；而在arm处理器也有自陷指令，通过 （    ） 实现的。★#", "type": "填空", "answer": "\"INT 0x80\"  \"SWI\"", "level": 1, "ppt": true, "index": 15 }, { "question": "从系统的角度来看，中断是一个流程。一般来说，它要经过三个环节：（    ） 。★#", "type": "填空", "answer": "中断响应 ，中断处理，中断返回", "level": 1, "ppt": true, "index": 16 }, { "question": "ARM-linux进程调度依据是：（    ）。★#", "type": "填空", "answer": "Policy，Priority，Counter 和 rt_priority", "level": 1, "ppt": true, "index": 17 }, { "question": "MMU的主要作用是 （    ） 的保护和限制。#", "type": "填空", "answer": "地址映射 和 对地址访问", "level": 0, "ppt": true, "index": 18 }, { "question": "Linux设备可分为3类，包括（    ）。#", "type": "填空", "answer": "字符设备、块设备 和 网络设备", "level": 0, "ppt": true, "index": 19 }, { "question": "试给出常见的三种嵌入式OS：（    ） 等。#", "type": "填空", "answer": "嵌入式Linux，Windows CE，Symbian，VxWorks，QNX，Palm", "level": 0, "ppt": true, "index": 20 }, { "question": "一个Android应用程序通常是由４个组件构成，包括：（    ）。★#", "type": "填空", "answer": "活动（Activity）、意图（Intent）、服务（Service）、内容提供器（Content Provider）", "level": 1, "ppt": true, "index": 21 }, { "question": "常用的两种Flash技术（存储）是 （    ）。#", "type": "填空", "answer": "NOR Flash 技术 和 NAND Flash 技术", "level": 0, "ppt": true, "index": 22 }, { "question": "模块的代码结构包括：（    ）。#", "type": "填空", "answer": "头文件，模块宏声明，初始化函数，退出函数以及入口出口函数设置", "level": 0, "ppt": true, "index": 23 }, { "question": "Linux内核编译命令有三种，包括 （    ）。 ★#", "type": "填空", "answer": "make 、make zImage 和 make bzImage ", "level": 1, "ppt": true, "index": 24 }, { "question": "ARM架构下的内存映射模型包括两种：（    ）。#", "type": "填空", "answer": "段映射、页面映射", "level": 0, "ppt": true, "index": 25 }, { "question": "Boot Loader的操作模式包括：（    ）。#", "type": "填空", "answer": "启动加载模式和下载模式", "level": 0, "ppt": true, "index": 26 }, { "question": "Linux的编译器是（    ）。嵌入式Linux的编译器是（    ）。#", "type": "填空", "answer": "gcc  arm-linux-gcc", "level": 0, "ppt": true, "index": 27 }, { "question": "在Linux内核中，包含了几乎所有主流操作系统具有的同步机制，其中2.6内核的同步机制包括：（    ）。★", "type": "填空", "answer": "同步锁、信号量、原子操作和完成事件", "level": 1, "ppt": false, "index": 28 }, { "question": "常见的Bootload包括：（    ） 等。#", "type": "填空", "answer": "LILO、GRUB、U-BOOT、BLOB、VIVI", "level": 0, "ppt": true, "index": 29 }, { "question": "Cortex处理器目前有三个系列，分别是：（    ）。#", "type": "填空", "answer": "Cortex-A、Cortex-R 和 Cortex-M", "level": 0, "ppt": true, "index": 30 }, { "question": "Linux中的所有设备都是 （    ），在内核中使用 （    ） 来表示一个打开的文件。#", "type": "填空", "answer": "文件  file结构体", "level": 0, "ppt": true, "index": 31 }, { "question": "（    ）在内核中代表一个网络设备，网络设备驱动程序需通过填充它的具体成员并对其进行注册方可实现硬件操作函数与内核的挂接；它包含网络设备的（    ）和操作接口。", "type": "填空", "answer": "net_device结构体  属性描述", "level": 0, "ppt": false, "index": 32 }, { "question": "嵌入式系统是以（    ）为中心，以计算机技术为基础，采用（    ）软硬件，适用于对功能、可靠性、成本、体积、功耗等有严格要求的专用（特殊）计算机系统。#", "type": "填空", "answer": "应用  可裁剪", "level": 0, "ppt": true, "index": 33 }, { "question": "Boot Loader的操作模式包括：（    ）。#", "type": "填空", "answer": "启动加载模式、下载模式", "level": 0, "ppt": true, "index": 34 }, { "question": "ARM系统结构中，地址映射可以是单层的按（    ），也可以是二层的（    ）。 #", "type": "填空", "answer": "段映射  页面映射", "level": 0, "ppt": true, "index": 35 }, { "question": "嵌入式处理器通常有两种结构，分别是（    ）。#", "type": "填空", "answer": "冯诺依曼结构（普林斯顿结构）、哈佛结构", "level": 0, "ppt": true, "index": 36 }, { "question": "（    ）描述了一个文件操作所需要的所有函数，以（    ）的形式给出的。", "type": "填空", "answer": "file_operations结构体  函数指针", "level": 0, "ppt": false, "index": 37 }, { "question": "Linux的内核配置命令有三种，包括（    ）。#", "type": "填空", "answer": "make config、make xconfig、make menuconfig", "level": 0, "ppt": true, "index": 38 }, { "question": "在linux网络子系统各层协议中的数据传递实际上传递的是（    ）结构，它为各层之间的（    ）提供了统一的定义。", "type": "填空", "answer": "sk_buffer  数据交换单元", "level": 0, "ppt": false, "index": 39 }, { "question": "区别ARMv9和ARM9", "type": "简答", "answer": "ARMv9是指令集体系结构版本，ARM9是处理器系列中的一种\n", "level": 0, "ppt": false, "index": 40 }, { "question": "ARM指令和Thumb指令的区别", "type": "简答", "answer": "Thumb指令是arm指令压缩形式的子集，并不是完整的体系机构。Thumb指令是16位的指令集，ARM指令是32位指令集\n", "level": 0, "ppt": false, "index": 41 }, { "question": "NAND和NOR", "type": "简答", "answer": "NAND：单元排列串行，以块和页为单位进行读写，顺序读写，随机读写慢\nNOR： 单元排列并行，按字节进行读写，随机读写快，可以片内执行\n", "level": 0, "ppt": false, "index": 42 }, { "question": "BootLoaders", "type": "简答", "answer": "主要工作\n初始化硬件设备和建立内存空间的映射图\n将系统的软硬件环境带到一个合适的状态\n为最终调用操作系统内核准备好正确的环境\n", "level": 0, "ppt": false, "index": 43 }, { "question": "简述Linux设备驱动程序的代码结构（5分）#", "type": "简答", "answer": "Linux设备驱动程序的代码结构大致可以分为如下几个部分\n驱动程序的注册与注销\n设备的打开与释放\n设备的读写操作\n设备的控制操作\n设备的中断和轮询处理\n", "level": 0, "ppt": true, "index": 44 }, { "question": "设当前Fedora普通用户ecust的工作目录为/home/ecust；在/opt目录下有一个文件hello，如何在root用户（root密码为ecust）下执行该文件？（5分）", "type": "简答", "answer": "root@/home/ecust >\nroot@/home/ecust >su root\n输入root的密码：ecust\nroot@/home/ecust >cd /opt\nroot@opt>chmod  a+x  hello\nroot@opt>./hello\n", "level": 0, "ppt": false, "index": 45 }, { "question": "简述哈佛结构处理器的特点?（5分）★#", "type": "简答", "answer": "指令存储器与数据存储器独立设计 \n存储地址独立编址、独立访问 \n四总线制提高吞吐率 \n程序的地址总线、数据总线，数据的地址总线、数据总线 \n取指与执行能并发 \n", "level": 1, "ppt": true, "index": 46 }, { "question": "简述Linux模块机制的必要性？（分）#", "type": "简答", "answer": "Linux是一个单内核（monolithic kernel） \n单内核的最大优点是效率高\t\n可扩展性以及可维护性差的缺点 \n模块机制的引入就是为了弥补这一缺陷 \n\n", "level": 0, "ppt": true, "index": 47 }, { "question": "简述ARM-Linux进程的主动调度过程？（5分）#", "type": "简答", "answer": "可分为4步\n（1）将进程添加到事件等待队列中 \n（2）置进程状态为TASK_INTERRUPTIBLE（或TASK_UNINTERRUPTIBLE） \n（3）在循环中检查等待条件是否满足，不满足则调用schedule()，满足了就退出循环\n（4）将进程从事件等待队列中删除\n", "level": 0, "ppt": true, "index": 48 }, { "question": "简述Linux和Windows文件系统的区别？（5分）#", "type": "简答", "answer": "Linux文件系统是目录树结构；Windows文件系统以驱动器的盘符为基础；\n在Linux下分区数据目录树结构；在Windows下目录结构属于分区。\n", "level": 0, "ppt": true, "index": 49 }, { "question": "ARM体系结构和ARM处理器系列的关系？（5分）#", "type": "简答", "answer": "ARM体系结构指的是基于ARM指令集而制定的体系结构；ARM处理器系列是指在某一体系结构下的各种处理器（产品）；ARM体系结构是基础，而ARM处理器系列则是其具体实现。\n", "level": 0, "ppt": true, "index": 50 }, { "question": "简述以下指令的含义。（5分）", "type": "简答", "answer": "SUB R1, R1, #0x1 \nSTR R1, [R2];\n意义： R1<- R1 - 1 ；将R1的值存入以R2内容为地址的存储器中\n\n", "level": 0, "ppt": false, "index": 51 }, { "question": "什么是Linux设备文件？（5分）#", "type": "简答", "answer": "操作系统内核和机器硬件之间的接口 \n为应用程序屏蔽了硬件的细节。\n在应用程序看来，硬件设备只是一个设备文件, 应用程序可以像操作普通文件一样对硬件设备进行操作 \n", "level": 0, "ppt": true, "index": 52 }, { "question": "简述Linux设备驱动程序的代码结构。（5分）#", "type": "简答", "answer": "Linux设备驱动程序的代码结构大致可以分为如下几个部分\n驱动程序的注册与注销、设备的打开与释放、设备的读写操作、设备的控制操作、设备的中断和轮询处理\n", "level": 0, "ppt": true, "index": 53 }, { "question": "驱动的加载使用主要有哪些方法？它们的差别是什么？（5分）", "type": "简答", "answer": "主要有动态加载和静态加载。\n动态加载：通过模块机制进行加载；\n静态加载：直接修改内核源文件和Makefile文件，通过重新编译整个内核来把驱动直接加入内核。\n区别：静态加载会增加内核的大小，还要修改内核的源文件，而且不能动态卸载，不利于调试。\n", "level": 0, "ppt": false, "index": 54 }, { "question": "简述块设备与字符设备的区别。（5分）★#", "type": "简答", "answer": "读写单位不同于字符设备 \n字符设备以字节为单位进行读写  ；块设备则以块为单位  \n块设备的I/O请求都有对应的缓冲区并使用了请求队列对请求进行管理 \n块设备还支持随机访问，而字符设备只能顺序访问 \n\n", "level": 1, "ppt": true, "index": 55 }, { "question": "简述嵌入式系统的定义。（5分）#", "type": "简答", "answer": "嵌入式系统是以应用为中心，以计算机技术为基础，采用可剪裁软硬件，适用于对功能、可靠性、成本、体积、功耗等有严格要求的专用计算机系统。简而言之，它是完成特定任务的计算机系统\n", "level": 0, "ppt": true, "index": 56 }, { "question": "简单阐述嵌入式系统中设备驱动的地位和主要作用（5分）#", "type": "简答", "answer": "答案1：驱动程序负责将应用程序如读、写等操作正确无误的传递给相关的硬件，并使硬件能够做出正确反应的代码。驱动程序像一个黑盒子，它隐藏了硬件的工作细节，应用程序只需要通过一组标准化的接口实现对硬件的操作。\n答案2：设备驱动程序为应用程序屏蔽了硬件的细节，这样在应用程序看来，硬件设备只是一个设备文件，应用程序可以像操作普通文件一样对硬件设备进行操作。设备驱动程序是内核的一部分，它完成以下功能：对设备的初始化和释放；把数据从内核传送到硬件和从硬件读取数据；读取应用程序传送给设备文件的数据和回送应用程序请求的数据；监测和处理设备出现的错误。\n", "level": 0, "ppt": true, "index": 57 }, { "question": "Linux内核是单一内核还是微内核？它与Unix内核有什么不同？（5分）", "type": "简答", "answer": "Linux是一个单一内核操作系统，但它与传统的单一内核UNIX操作系统不同。\n传统的单一内核采用静态编译和链接，而Linux采用模块机制来扩展其功能；模块可以动态装入和卸载，在需要时自动装入和卸载\n", "level": 0, "ppt": false, "index": 58 }, { "question": "网络设备驱动实现时经常会用到哪两个数据结构，各自在驱动中的作用？（5分）", "type": "简答", "answer": "网络设备驱动中最重要的两个数据结构是net_device和sk_buffer。net_device包含了具体网络设备的各种信息和操作接口，sk_buffer是Linux网络子系统的核心，在Linux网络系统各层协议中的数据传递实际上传递的是sk_buffer结构，它为各层之间的数据交换单元提供了统一的定义。\n", "level": 0, "ppt": false, "index": 59 }, { "question": "简述冯.诺依曼结构处理器的特点？#", "type": "简答", "answer": "1)指令存储器与数据存储器一体化设计 \n2)指令地址与数据地址统一编码\n3)高速运算时，储存传输通道有瓶颈\n", "level": 0, "ppt": true, "index": 60 }, { "question": "简述设备驱动的功能。#", "type": "简答", "answer": "1)对设备的初始化和释放\n2)把数据从内核传送到硬件和从硬件读取数据\n3)读取应用程序传送给设备文件的数据和回送应用程序请求的数据\n4)检测和处理设备出现的错误\n", "level": 0, "ppt": true, "index": 61 }, { "question": "内存管理的内容包括哪些？#", "type": "简答", "answer": "包含地址映射、内存空间的分配，有时候还包括地址访问的限制（即保护机制）\n如果将I/O也放在内存地址空间中，则还要包括I/O地址的映射 \n另外，像代码段、数据段、堆栈段空间的分配等等都属于内存管理\n", "level": 0, "ppt": true, "index": 62 }, { "question": "简述一般情况下，Android系统的磁盘分区情况", "type": "简答", "answer": "包括如下分区：\nBoot分区：存储boot.img映像\nSystem分区：存放System.img映像\nUserData分区：存放userdata.img映像\nRecovery分区：存放recovery.img映像\nCache分区：应用程序缓存分区，加快程序启动\nMisc分区：系统设置厂商硬件设置信息分区\n", "level": 0, "ppt": false, "index": 63 }, { "question": "简述哈佛结构处理器的特点。（5分）★#", "type": "简答", "answer": "指令存储器与数据存储器独立设计 \n存储地址独立编址、独立访问 \n四总线制提高吞吐率 \n程序的地址总线、数据总线，数据的地址总线、数据总线 \n取指与执行能并发\n", "level": 1, "ppt": true, "index": 64 }, { "question": "简述Linux文件系统控制设备驱动的途径（5分）#", "type": "简答", "answer": "Linux文件系统有两条独立控制设备驱动的途径，分别是通过设备驱动的接口和通过文件管理器接口进行控制。\n", "level": 0, "ppt": true, "index": 65 }, { "question": "简述网络设备驱动中sk_buffer的作用（5分）", "type": "简答", "answer": "sk_buffer是Linux网络子系统的核心，在Linux网络系统各层协议中的数据传递实际上传递的是sk_buffer结构，它为各层之间的数据交换单元提供了统一的定义。\n", "level": 0, "ppt": false, "index": 66 }, { "question": "GDB★", "type": "名词解释", "answer": "GDB是GNU C自带的调试工具，使用GDB可以完成下面这些任务：\n1)运行程序,可以给程序加上所需的调试任何条件\n2)在给定的条件下让程序停止\n3)检查程序停止时的运行状态\n通过改变一些数据，可以更快地改正程序的错误\n", "level": 1, "ppt": false, "index": 67 }, { "question": "Linux根文件系统★#", "type": "名词解释", "answer": "1)系统挂载的第一个文件系统\n2)本质来说，根文件系统就是一种目录结构\n3)和普通文件系统的区别是要包括Linux启动时所必需的目录和关键性文件\n", "level": 1, "ppt": true, "index": 68 }, { "question": "嵌入式系统#", "type": "名词解释", "answer": "嵌入式系统是以应用为中心，以计算机技术为基础，采用可剪裁软硬件，适用于对功能、可靠性、成本、体积、功耗等有严格要求的专用计算机系统。简而言之，它是完成特定任务的计算机系统\n", "level": 0, "ppt": true, "index": 69 }, { "question": "Android中的活动（Activity）★★#", "type": "名词解释", "answer": "1)最基本的Android应用程序组件\n2)在应用程序中，一个活动通常就是一个单独的屏幕\n3)每个活动都通过继承活动基类而被实现为一个独立的活动类\n活动类将会显示由视图控件组成的用户接口，并对事件做出响应\n", "level": 2, "ppt": true, "index": 70 }, { "question": "Linux设备文件", "type": "名词解释", "answer": "Linux抽象了对硬件的处理，所有的硬件设备都可以作为普通文件一样来看待。可以使用和操作文件相同的、标准的系统调用接口来完成打开、关闭、读写和I/O控制操作。对用户来说，设备文件与普通文件并无区别\n", "level": 0, "ppt": false, "index": 71 }, { "question": "Linux内核设备模型★", "type": "名词解释", "answer": "内核设备模型是Linux 2.6之后引进的，是为了适应系统拓扑结构越来越复杂，对电源管理、热插拔支持要求越来越高等形势下开发的全新的设备模型。它采用sysfs文件系统，一个类似于/proc文件系统的特殊文件系统，作用是将系统中的设备组织成层次结构，然后向用户程序提供内核数据结构信息\n", "level": 1, "ppt": false, "index": 72 }, { "question": "Make工具★★#", "type": "名词解释", "answer": "make是Linux下的一款程序自动维护工具，配合Makefile的使用，就能够根据程序中模块的修改情况，自动判断应该对那些模块重新编译，从而保证软件是由最新的模块构成。\n", "level": 2, "ppt": true, "index": 73 }, { "question": "文件系统★#", "type": "名词解释", "answer": "文件系统是文件的数据结构或组织方法，是操作系统中最直观的部分，用户通过文件直接地和操作系统交互。操作系统需要为计算机提供数据计算和数据存储的功能，这些数据也是通过文件系统直观地存储在介质上，操作系统则按照自己的数据格式管理这些文件。\n", "level": 1, "ppt": true, "index": 74 }, { "question": "宿主机-目标机开发过程★#", "type": "名词解释", "answer": "1)宿主机上编写代码 \n2)交叉编译工具编译 \n3)下载到目标板上测试执行\n利用宿主机上的调试工具对目标板上运行的程序进行远程调试\n", "level": 1, "ppt": true, "index": 75 }, { "question": "模块的版本依赖★", "type": "名词解释", "answer": "1)模块代码一定要在连接不同内核版本之前重新编译\n2)模块是结合到某个特殊内核版本的数据结构和数据原型上\n不同的内核版本的接口可能差别很大\n", "level": 1, "ppt": false, "index": 76 }, { "question": "Linux的设备号", "type": "名词解释", "answer": "主设备号用来标识该设备的种类,也标识了该设备所使用的驱动程序 \n次设备号由内核使用，标识使用同一设备驱动程序的不同硬件设备\n", "level": 0, "ppt": false, "index": 77 }, { "question": "CPSR和SPSR★#", "type": "名词解释", "answer": "CPSR：当前程序状态寄存器；\nSPSR：保存程序状态寄存器。\n当产生异常时，保存CPSR寄存器内容到SPSR，同样注意这个SPSR也是异常模式下的状态寄存器；当异常处理结束时，将SPSR中的内容恢复到CPSR之中。\n", "level": 1, "ppt": true, "index": 78 }, { "question": "MMU#", "type": "名词解释", "answer": "Memory Management Unit，即内存管理单元，提供内存访问保护和虚拟地址到物理地址的转换。\n", "level": 0, "ppt": true, "index": 79 }, { "question": "远程调试#", "type": "名词解释", "answer": "调试器运行于通用桌面操作系统的应用程序，被调试的程序则运行于基于特定硬件平台的嵌入式操作系统（目标操作系统）\n", "level": 0, "ppt": true, "index": 80 }, { "question": "Intent", "type": "名词解释", "answer": "Intent是利用消息实现应用程序间的交互机制, 能够在程序运行的过程中连接两个不同的组件。\n描述了应用中一次操作的动作、数据以及附加数据，向Android表达某种请求或者意愿 \nAndroid系统会根据Intent描述的内容来选择适当的组件来响应，并将Intent传递给该组件，完成组件的调用\n", "level": 0, "ppt": false, "index": 81 }, { "question": "Makefile★#", "type": "名词解释", "answer": "Makefile用于描述系统中模块之间的相互依赖关系，以及产生目标文件所要执行的命令；（2分）所以，一个makefile由依赖关系、规则指令三部分内容组成\n", "level": 1, "ppt": true, "index": 82 }, { "question": "GPIO", "type": "名词解释", "answer": "GPIO是一个通用的可编程的I/O接口，其接口寄存器中的每一位都可以分别在程序的控制下设置用于输入或者输出\n", "level": 0, "ppt": false, "index": 83 }, { "question": "Linux设备文件#", "type": "名词解释", "answer": "操作系统内核和机器硬件之间的接口，为应用程序屏蔽了硬件的细节。\n在应用程序看来，硬件设备只是一个设备文件, 应用程序可以像操作普通文件一样对硬件设备进行操作 \n", "level": 0, "ppt": true, "index": 84 }, { "question": "DMA#", "type": "名词解释", "answer": "直接内存存取，解决快速数据访问的有效方法；\nDMA控制器可以不需要处理器的干预，在设备和系统内存高速传输数据 \n", "level": 0, "ppt": true, "index": 85 }, { "question": "Android应用中的Service#", "type": "名词解释", "answer": "适用于开发无界面、长时间运行的应用功能； \n特点：没有用户界面；比Activity 的优先级高，不会轻易被Android系统终止；即使Service被系统终止，在系统资源恢复后Service也将自动恢复运行状态；用于进程间通信（Inter Process Communication，IPC），解决两个不同Android应用程序进程之间的调用和通讯问题\n", "level": 0, "ppt": true, "index": 86 }, { "question": "Linux内核的kobject", "type": "名词解释", "answer": "Linux内核的“基”对象\n提供一个统一的计数系统\n其他对象的引用计数继承或封装kobject的引用计数\n", "level": 0, "ppt": false, "index": 87 }, { "question": " 交叉编译#", "type": "名词解释", "answer": "交叉编译就是在一个架构下编译另一个架构的目标文件。\n简单地说，就是在一个平台上生成另一个平台上的可执行代码。\n", "level": 0, "ppt": true, "index": 88 }, { "question": "寄存器PC（4分）", "type": "名词解释", "answer": "程序计数器（Program Counter），用来保存下一条指令的地址。\n", "level": 0, "ppt": false, "index": 89 }, { "question": "如何安装ARM-Linux的交叉编译环境；其中，交叉工具集Toolchain（xscalev1_010001targz）在/home/user/下？（4分）★#", "type": "综合", "answer": "将xscalev1_010001.tar.gz拷到/opt目录下\n[root@localhost root] $ cp /home/user/xscalev1_010001.tar.gz  /opt \n解压编译工具文件  \n[root@localhost root] $ cd /opt \n[root@localhost root] $ tar xvfz xscalev1_010001.tar.gz  \n配置路径  \n[root@localhost root] $ vi ~/.bash_profile   \n添加 PATH=$PATH:/opt/xscalev1/bin\n", "level": 1, "ppt": true, "index": 90 }, { "question": "编译内核的命令有哪些？它们有什么区别？（5分）#", "type": "综合", "answer": "有三种内核配置命令：make, make zImage, make bzImage；\n三者都实现内核的完全编译；其中命令make zImage和命令make bzImage生成的内核都是使用gzip压缩的，只要使用一个就够了，它们的区别在于使用make bzImage可以生成大一点的内核，比如在编译2.4.0版本的内核时如果使用make zImage命令，那么就会出现system too big的错误提示。\n", "level": 0, "ppt": true, "index": 91 }, { "question": "如何与开发板通信？请简述配置及控制过程。（6分）#", "type": "综合", "answer": "通过串口与开发板通信。利用minicom工具，设置串口信息；XSBase270平台需要将串口1设置为：波特率115200、数据位8、奇偶校验无、停止位1、数据流控制无。\n运行minicom，通过minicom控制目标板的终端；\n启动开发板的bootloader，在启动的2秒内点击任何按键，进入bootloader的下载模式；\n进入bootloader的命令控制行，进而与开发白通信。\n", "level": 0, "ppt": true, "index": 92 }, { "question": "什么是根文件系统？（5分）★#", "type": "综合", "answer": "系统挂载的第一个文件系统 \n本质来说，根文件系统就是一种目录结构 \n和普通文件系统的区别 \n要包括Linux启动时所必需的目录和关键性文件 \n", "level": 1, "ppt": true, "index": 93 }, { "question": "NorFlash上的文件系统是什么？如何定制根文件系统？（6分）#", "type": "综合", "answer": "JFFS2文件系统；\n首先，配置并编译生成文件系统中一些必要的命令；然后，生成根文件系统所必要一些目录，并将所生成的系统命令放置到文件系统所对应的目录中；接着，在文件系统中生成一些必要的文件，包括一些包括rc, rcS, motd等启动文件；随后，利用mkfs.jffs2指令生成一个文件系统的映像文件；最后，将制作的jffs2文件下系统映像烧写到flash中。\n", "level": 0, "ppt": true, "index": 94 }, { "question": "简述根文件系统的编译及配置过程？（5分）★", "type": "综合", "answer": "解压文件系统源代码：\n[root@localhost opt]# tar -xvf /home/Liod270/busybox-1.14.2.tar.bz2 -C /opt\n更改交叉编译环境：\n[root@localhost busybox-1.14.2]# vi Makefile\n将CROSS_COMPILE更改为：\nCROSS_COMPILE ?=/opt/xscalev1/bin/arm-linux-\n通过make menuconfig，选择合适的工具集\n配置完成后可进行编译：\n[root@localhost busybox-1.14.2]# make dep\n[root@localhost busybox-1.14.2]# make install\n进入到_install目录，配置根文件系统所需的必要文件。\n利用mkfs.jffs2制作JFFS2文件\n# ./mkfs.jffs2 –o rootfs270.img –e 0x40000 –r  _install –p –l\n", "level": 1, "ppt": false, "index": 95 }, { "question": "如何将定制好的根文件系统下载并烧写到目标板？（6分）★★", "type": "综合", "answer": "1)在宿主机（PC机）启动tftpd32程序\n2)配置宿主机上tftp的工作目录和当前IP地址，将编译好的映像拷贝到tftp的工作目录下\n3)将目标机与PC机通过串口相连\n4)通过超级终端，进入到目标机的下载模式\n5)进入Bootloader 的命令行模式：在菜单模式下，选择“0”。\n6)通过网线将目标机接入网络\n7)通过Bootloader在命令行模式下的命令，检查并设置目标机的网络连接是否正确：\n8)通过tftp下文件系统镜像（即拷贝到tftp工作目录下的内核文件，如rootfs.img）：bboot> tftprootfs.img root\n9)烧写flash：bboot> flash root\n", "level": 2, "ppt": false, "index": 96 }, { "question": "常见的三个linux内核配置命令有哪些？它们有什么区别？（4分）#", "type": "综合", "answer": "#make config（基于文本的最为传统的配置界面，不推荐使用） \n#make menuconfig（基于文本选单的配置界面，字符终端下推荐使用） \n#make xconfig（基于图形窗口模式的配置界面，Xwindow下推荐使用）\n", "level": 0, "ppt": true, "index": 97 }, { "question": "简述Arm-linux内核的定制过程？（5分）#", "type": "综合", "answer": "配置Linux 2.6内核的编译器。\n将Linux2.6内核解压到/opt\n设置Makefile之中的交叉编译环境：\n# vi Makefile\n更改为：\n#CROSS_COMPILE  ?=/opt/arm-linux-4.2.1/bin/arm-linux-\nCROSS_COMPILE  ?=/opt/usr/local/bin/arm-linux-\n加载默认编译配置并保存\n[root@localhost linux-2.6.22.10]# cp arch/arm/configs/xsbase270_defconfig ./270config\n[root@localhost linux-2.6.22.10]# make menuconfig\n通过菜单栏配置，到最后找到：“Load an Alternate Configuration File”，进行加载配置文件\n之后就可以make编译了：\n[root@localhost linux-2.6.22.10]# make zImage\n", "level": 0, "ppt": true, "index": 98 }, { "question": "编译内核的命令有哪些？它们有什么区别？（4分）#", "type": "综合", "answer": "有三种内核配置命令：make, make zImage, make bzImage；\n三者都实现内核的完全编译；其中命令make zImage和命令make bzImage生成的内核都是使用gzip压缩的，只要使用一个就够了，它们的区别在于使用make bzImage可以生成大一点的内核，比如在编译2.4.0版本的内核时如果使用make zImage命令，那么就会出现system too big的错误提示。\n", "level": 0, "ppt": true, "index": 99 }, { "question": "如何安装交叉编译环境/简述交叉编译环境的配置过程？（5分）#", "type": "综合", "answer": "$ tar jxvf /home/ecust/ToolChain/toolchain-4.5.1-farsight. tar.bz2\n$ ln -s toolchain-4.5.1-farsight toolchain\n$ vim ~/.bashrc \n   在该文件的末尾输入：\n   export PATH=/home/ecust\n/workplace/toolchain/bin:$PATH\n保存退出\n$ source  ~/.bashrc\n", "level": 0, "ppt": true, "index": 100 }, { "question": "基于Flash的文件系统不包括（    ）", "type": "选择", "options": ["A.JFFS2", "B.YAFFS2", "C.Cramfs", "D.Ext2"], "answer": "D", "level": 0, "ppt": false, "index": 101 }, { "question": "Android为了支持C语言，提供（    ）库。", "type": "选择", "options": ["A.xlibc", "B.glibC.", "C.Bioniclibc", "D.xlib"], "answer": "C", "level": 0, "ppt": false, "index": 102 }, { "question": "Linux下的/sbin目录通常包括Linux系统中的（    ）★", "type": "选择", "options": ["A.设备文件", "B.类库", "C.配置文件", "D.系统工具"], "answer": "D", "level": 1, "ppt": false, "index": 103 }, { "question": "ARM处理器有（    ）种运行模式", "type": "选择", "options": ["A.4", "B.5", "C.6", "D.7"], "answer": "D", "level": 0, "ppt": false, "index": 104 }, { "question": "BootLoader的阶段1通常包括以下步骤（    ）★", "type": "选择", "options": ["A.检测系统的内存映射", "B.为加载阶段2准备RAM空间", "C.设置内核的启动参数", "D.调用内核。"], "answer": "B", "level": 1, "ppt": false, "index": 105 }, { "question": "通常bootloader烧写在ARM开发板的（    ）地址上。★", "type": "选择", "options": ["A.0x0000", "B.0xc0000", "C.0x1c0000", "D.0xA0000"], "answer": "A", "level": 1, "ppt": false, "index": 106 }, { "question": "采用寄存器间接寻址的指令是（    ）", "type": "选择", "options": ["A.ADDR1,R1,#0x1", "B.MOVR1,R0", "C.SWPR1,R1,[R2]", "D.ADDR1,R1,R2,ROR#0x2"], "answer": "C", "level": 0, "ppt": false, "index": 107 }, { "question": "常用的嵌入式操作系统不包括（    ）", "type": "选择", "options": ["A.嵌入式Linux", "B.WindowsXP", "C.WindowsCE", "D.Symbian"], "answer": "B", "level": 0, "ppt": false, "index": 108 }, { "question": "下面可以用来更改路径的命令（    ）", "type": "选择", "options": ["A.rm", "B.vi", "C.cd", "D.mkdir"], "answer": "C", "level": 0, "ppt": false, "index": 109 }, { "question": "冯诺依曼结构又称普林斯顿结构，其特点不包括（    ）", "type": "选择", "options": ["A.指令存储器与数据存储器一体化设计", "B.8086系列采用冯诺依曼结构", "C.高速运算时，储存传输通道有瓶颈", "D.指令地址与数据地址独立编码"], "answer": "D", "level": 0, "ppt": false, "index": 110 }, { "question": "为了在屏幕上显示，需要在Android的（    ）组件中增加视图控件。", "type": "选择", "options": ["A.Service", "B.Intent", "C.Activity", "D.ContentProvider"], "answer": "C", "level": 0, "ppt": false, "index": 111 }, { "question": "嵌入式系统的核心部件是（    ）", "type": "选择", "options": ["A.嵌入式处理器", "B.嵌入式存储器", "C.嵌入式操作系统", "D.嵌入式外围设备"], "answer": "A", "level": 0, "ppt": false, "index": 112 }, { "question": "下面可以用来删除文件的命令（    ）", "type": "选择", "options": ["A.rm", "B.vi", "C.cd", "D.mkdir"], "answer": "A", "level": 0, "ppt": false, "index": 113 }, { "question": "通常在嵌入式系统中的NANDFlash上所构建的嵌入式文件系统是（    ）", "type": "选择", "options": ["A.EXT2", "B.JFFS2", "C.YAFFS2", "D.FAT"], "answer": "C", "level": 0, "ppt": false, "index": 114 }, { "question": "Android在Kernel层通过（    ）减小进程间通信的开销。★", "type": "选择", "options": ["A.共享内存", "B.Binder", "C.Socket", "D.信号量"], "answer": "B", "level": 1, "ppt": false, "index": 115 }, { "question": "在Linux下，/dev目录通常包含Linux系统中（    ）", "type": "选择", "options": ["A.日志文件", "B.系统管理员文件", "C.临时文件", "D.使用的外部设备文件"], "answer": "D", "level": 0, "ppt": false, "index": 116 }, { "question": "Linux文件系统有（    ）条独立控制设备驱动的途径", "type": "选择", "options": ["A.1", "B.2", "C.3", "D.4"], "answer": "B", "level": 0, "ppt": false, "index": 117 }, { "question": "嵌入式Linux特点不包括（    ）★", "type": "选择", "options": ["A.优秀的开发工具", "B.内核高效稳定", "C.以gcc做编译器", "D.采用微内核结构"], "answer": "D", "level": 1, "ppt": false, "index": 118 }, { "question": "以下（    ）不属于嵌入式系统的特点", "type": "选择", "options": ["A.面向通用应用；", "B.不具备开发能力；", "C.采用量体裁衣的设计方法；", "D.升级换代同步。"], "answer": "A", "level": 0, "ppt": false, "index": 119 }, { "question": "BootLoader的阶段2通常包括以下步骤（    ）", "type": "选择", "options": ["A.硬件设备初始化", "B.调用内核", "C.为加载阶段2准备RAM空间", "D.设置堆栈指针sp"], "answer": "B", "level": 0, "ppt": false, "index": 120 }, { "question": "BootLoader的阶段2通常包括以下步骤（    ）", "type": "选择", "options": ["A.加载内核映像和根文件系统映像", "B.硬件设备初始化。", "C.为加载阶段2准备RAM空间", "D.设置堆栈指针sp"], "answer": "A", "level": 0, "ppt": false, "index": 121 }, { "question": "BootLoader与主机之间的通信设备及协议不包括（    ）", "type": "选择", "options": ["A.Modem", "B.以太网", "C.tftp", "D.zmodem"], "answer": "A", "level": 0, "ppt": false, "index": 122 }, { "question": "RISC架构的ARM微处理器一般不具有的特点是（    ）", "type": "选择", "options": ["A.大量使用寄存器，指令执行速度快", "B.采用可变长度的指令格式", "C.大多数数据操作都在寄存器中完成", "D.寻址方式灵活简单，执行效率高"], "answer": "B", "level": 0, "ppt": false, "index": 123 }, { "question": "一般嵌入式硬件设计平台选择要考虑的因素不包括（    ）", "type": "选择", "options": ["A.处理器选择", "B.软件设计平台的选择", "C.嵌入式应用软件开发", "D.开发板的重量"], "answer": "D", "level": 0, "ppt": false, "index": 124 }, { "question": "哈佛结构处理器的特点不包括（    ）", "type": "选择", "options": ["A.指令存储器与数据存储器独立设计", "B.存储地址独立编址、独立访问", "C.程序和数据共用总线", "D.取指与执行能并发"], "answer": "C", "level": 0, "ppt": false, "index": 125 }, { "question": "Linux内核文件（    ）是vmlinux经gzip压缩到低端内存后的文件。", "type": "选择", "options": ["A.vmlinuz", "B.bzImage", "C.initrd", "D.zImage"], "answer": "D", "level": 0, "ppt": false, "index": 126 }, { "question": "把某个module安装到kernel中的模块命令是（    ）", "type": "选择", "options": ["A.lsmod", "B.rmmod", "C.insmod", "D.depmod"], "answer": "C", "level": 0, "ppt": false, "index": 127 }, { "question": "Linux下的/sbin目录通常包括Linux系统中的（    ）★", "type": "选择", "options": ["A.设备文件", "B.类库", "C.配置文件", "D.系统工具"], "answer": "D", "level": 1, "ppt": false, "index": 128 }, { "question": "嵌入式处理器的功能是由（    ）决定的★", "type": "选择", "options": ["A.外观", "B.重量", "C.速度", "D.指令集"], "answer": "D", "level": 1, "ppt": false, "index": 129 }, { "question": "Android在Kernel层通过（    ）减小进程间通信的开销。★", "type": "选择", "options": ["A.共享内存", "B.Binder", "C.IPC", "D.信号量"], "answer": "B", "level": 1, "ppt": false, "index": 130 }, { "question": "下面可以用来切换路径的命令（    ）★", "type": "选择", "options": ["A.dd", "B.tar", "C.cd", "D.dir"], "answer": "C", "level": 1, "ppt": false, "index": 131 }, { "question": "不属于嵌入式操作系统的是（    ）★", "type": "选择", "options": ["A.嵌入式Linux", "B.WindowsXP", "C.Symbian", "D.VxWorks"], "answer": "B", "level": 1, "ppt": false, "index": 132 }, { "question": "通常bootloader烧写在ARM开发板的（    ）地址上。★", "type": "选择", "options": ["A.0x0000", "B.0xc0000", "C.0x1c0000", "D.0xA0000"], "answer": "A", "level": 1, "ppt": false, "index": 133 }, { "question": "处理器的选择不需要考虑的主要因素（    ）", "type": "选择", "options": ["A.处理性能", "B.是否内置调试工具", "C.硬件是否美观大方", "D.软件支持工"], "answer": "C", "level": 0, "ppt": false, "index": 134 }, { "question": "BootLoader的阶段1通常包括以下步骤（    ）★", "type": "选择", "options": ["A.检测系统的内存映射", "B.为加载阶段2准备RAM空间", "C.设置内核的启动参数", "D.调用内核。"], "answer": "B", "level": 1, "ppt": false, "index": 135 }, { "question": "诺依曼结构又称普林斯顿结构，其特点不包括（    ）★", "type": "选择", "options": ["A.指令存储器与数据存储器一体化设计", "B.8086系列采用冯诺依曼结构", "C.高速运算时，储存传输通道有瓶颈", "D.指令地址与数据地址独立编码"], "answer": "D", "level": 1, "ppt": false, "index": 136 }, { "question": "在Linux下，/dev目录通常包含Linux系统中（    ）", "type": "选择", "options": ["A.使用的外部设备文件", "B.系统管理员文件", "C.临时文件", "D.日志文件"], "answer": "A", "level": 0, "ppt": false, "index": 137 }, { "question": "Android为了支持C语言，提供（    ）库。★", "type": "选择", "options": ["A.xlibc", "B.glibC.", "C.Bioniclibc", "D.xlib"], "answer": "C", "level": 1, "ppt": false, "index": 138 }, { "question": "为了在屏幕上显示，需要在Android的（    ）组件中增加视图控件。★", "type": "选择", "options": ["A.Service", "B.Intent", "C.Activity", "D.ContentProvider"], "answer": "C", "level": 1, "ppt": false, "index": 139 }, { "question": "X86系统采用南北桥芯片桥接外设；其中，北桥芯片的作用不包括（    ）", "type": "选择", "options": ["A.与CPU联系", "B.控制内存", "C.管理I/O", "D.各种加速器"], "answer": "C", "level": 0, "ppt": false, "index": 140 }, { "question": "Android系统中的Boot分区存放的镜像文件是（    ）", "type": "选择", "options": ["A.Bootloader", "B.boot.img", "C.kernel", "D.uboot.bin"], "answer": "B", "level": 0, "ppt": false, "index": 141 }, { "question": "在下列Android系统的编译命令中，编译全部的命令是（    ）", "type": "选择", "options": ["A.m", "B.mm", "C.mmm", "D.mmmm"], "answer": "A", "level": 0, "ppt": false, "index": 142 }, { "question": "在Linux的Shell下，root用户的提示符是（    ）", "type": "选择", "options": ["A.$", "B.￥", "C.#", "D.%"], "answer": "C", "level": 0, "ppt": false, "index": 143 }, { "question": "建立（符号）链接的Linux命令是（    ）", "type": "选择", "options": ["A.ls", "B.cd", "C.ln", "D.more"], "answer": "C", "level": 0, "ppt": false, "index": 144 }, { "question": "通常bootloader烧写在ARM开发板的（    ）地址上。★", "type": "选择", "options": ["A.0x0000", "B.0xc0000", "C.0x1c0000", "D.0xA0000"], "answer": "A", "level": 1, "ppt": false, "index": 145 }, { "question": "嵌入式Linux特点不包括（    ）★", "type": "选择", "options": ["A.优秀的开发工具", "B.内核高效稳定", "C.以gcc做编译器", "D.采用微内核结构"], "answer": "D", "level": 1, "ppt": false, "index": 146 }, { "question": "在Linux中更改文件访问权限的命令是（    ）", "type": "选择", "options": ["A.chown", "B.chmod", "C.cd", "D.chgrp"], "answer": "B", "level": 0, "ppt": false, "index": 147 }, { "question": "Linux下的/sbin目录通常包括Linux系统中的（    ）★", "type": "选择", "options": ["A.设备文件", "B.类库", "C.配置文件", "D.系统工具"], "answer": "D", "level": 1, "ppt": false, "index": 148 }, { "question": "为了在屏幕上显示，需要在Android的（    ）组件中增加视图控件。★", "type": "选择", "options": ["A.Service", "B.Intent", "C.Activity", "D.ContentProvider"], "answer": "C", "level": 1, "ppt": false, "index": 149 }, { "question": "嵌入式处理器的功能是由（    ）决定的★", "type": "选择", "options": ["A.外观", "B.重量", "C.速度", "D.指令集"], "answer": "D", "level": 1, "ppt": false, "index": 150 }, { "question": "Android系统中的bootimg所存放的分区是（    ）", "type": "选择", "options": ["A.Bootloader分区", "B.boot分区", "C.kernel分区", "D.system分区"], "answer": "B", "level": 0, "ppt": false, "index": 151 }, { "question": "在下列Android系统的编译命令中，只编译当前目录的命令是（    ）", "type": "选择", "options": ["A.m", "B.mm", "C.mmm", "D.mmmm"], "answer": "B", "level": 0, "ppt": false, "index": 152 }, { "question": "在Linux下，/dev目录通常包含Linux系统中（    ）★", "type": "选择", "options": ["A.使用的外部设备文件", "B.系统管理员文件", "C.临时文件", "D.日志文件"], "answer": "A", "level": 1, "ppt": false, "index": 153 }, { "question": "把某个module安装到kernel中的模块命令是（    ）★", "type": "选择", "options": ["A.lsmod", "B.rmmod", "C.insmod", "D.depmod"], "answer": "C", "level": 1, "ppt": false, "index": 154 }, { "question": "嵌入式处理器的选择不需要考虑的主要因素（    ）★", "type": "选择", "options": ["A.处理性能", "B.是否内置调试工具", "C.硬件是否美观大方", "D.软件支持工具"], "answer": "C", "level": 1, "ppt": false, "index": 155 }, { "question": "嵌入式Linux特点不包括（    ）★", "type": "选择", "options": ["A.优秀的开发工具", "B.完善的网络通信和文件管理机制", "C.以gcc做编译器", "D.采用微内核结构"], "answer": "D", "level": 1, "ppt": false, "index": 156 }, { "question": "Linux下的/sbin目录通常包括Linux系统中的（    ）★", "type": "选择", "options": ["A.设备文件", "B.类库", "C.配置文件", "D.系统工具"], "answer": "D", "level": 1, "ppt": false, "index": 157 }, { "question": "以下（    ）不属于嵌入式系统的特点", "type": "选择", "options": ["A.面向通用应用；", "B.不具备开发能力；", "C.采用量体裁衣的设计方法；", "D.升级换代同步。"], "answer": "A", "level": 0, "ppt": false, "index": 158 }, { "question": "BootLoader的阶段2通常包括以下步骤（    ）★", "type": "选择", "options": ["A.设置内核的启动参数", "B.硬件设备初始化。", "C.为加载阶段2准备RAM空间", "D.设置堆栈指针sp"], "answer": "A", "level": 1, "ppt": false, "index": 159 }]
+    var app = new Vue({
+        el: "#app",
+        vuetify: new Vuetify(),
+        // axios: new axios(),
+        data() {
+            return {
+                question: question,
+                question_questions: [],
+                question_questions_CN: [],
+                search_text: undefined,
+                show_search: false,
+                index: -1,
+                quantity: 10,
+                show_question_CN: true,
+                show_context_CN: true,
+                show_context_EN: true,
+                show_note_edit: false,
+                notes: {},
+                show_spell: false,
+                index_history: [],
+                show_collection: false,
+                collection: [],
+                copy_collection_show: false,
+                paste_collection_text: "",
+                copy_note_show: false,
+                paste_note_text: "",
+                loading: false,
+                spell_text: "",
+                spell_success: false,
+                random: false,
+
+                panel: [0, 1, 2, 3],
+                update_log: [
+                    ["v1.0", "完成基本功能", "11.27"],
+                ]
+            }
+        },
+        methods: {
+            submit() { },
+            next_question() {
+                if (this.copy_collection_show || this.copy_note_show || this.show_note_edit) return;
+                const original_index = this.index;
+                this.spell_success = false;
+                if (this.show_collection) {
+                    var collection_index = this.collection.indexOf(this.index);
+                    if (this.random)
+                        collection_index = Math.floor((Math.random() * this.collection.length))
+                    else
+                        collection_index = (collection_index + 1) % this.collection.length;
+                    this.index = this.collection[collection_index]
+                }
+                else {
+                    if (this.random)
+                        this.index = Math.floor((Math.random() * question.length))
+                    else
+                        this.index = (this.index + 1) % question.length;
+                }
+                if (!(this.index >= 0))
+                    this.index = original_index;
+                if (this.show_spell) {
+                    var it = document.getElementById("input");
+                    it.click();
+                }
+            },
+            last_question() {
+                if (this.copy_collection_show || this.copy_note_show || this.show_note_edit) return;
+                this.index_history.pop();
+                var last_index = this.index_history.pop();
+                //TODO: 重复记录
+                if (last_index)
+                    this.index = last_index;
+                else
+                    this.index = 0;
+                if (this.show_spell) {
+                    var it = document.getElementById("input");
+                    it.click();
+                }
+            },
+            collect_question() {
+                if (this.collection.indexOf(this.index) > -1) {
+                    this.uncollect_question();
+                    return;
+                }
+                this.collection.push(this.index);
+                this.collection.sort(this.numberSort);
+            },
+            uncollect_question() {
+                var index = this.collection.indexOf(this.index);
+                this.collection.splice(index, 1);
+            },
+            numberSort(a, b) {
+                return a - b
+            },
+            GetQueryString(name) {
+                const url = decodeURI(window.location.search)
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = url.substr(1).match(reg);//search,查询？后面的参数，并匹配正则
+                if (r != null)
+                    return unescape(r[2]);
+                return null;
+            },
+            Contains(arr, obj) {
+                var i = arr.length;
+                for (let i = 0; i < arr.length; i++) {
+                    if (arr[i] === obj) {
+                        return i;
+                    }
+                }
+                return -1;
+            },
+            copyText(text) {
+                document.execCommand(text);
+            },
+
+            pasteToCollection() {
+                try {
+                    var collection = JSON.parse(this.paste_collection_text);
+                    collection.sort(this.numberSort);
+                    this.collection = collection;
+                    this.copy_collection_show = false;
+                    alert("导入成功");
+                } catch (error) {
+                    alert("导入失败 (" + error + ")");
+                }
+            },
+            pasteToNotes() {
+                try {
+                    var notes = JSON.parse(this.paste_note_text);
+                    this.notes = notes;
+                    this.copy_note_show = false;
+                    alert("导入成功");
+                } catch (error) {
+                    alert("导入失败 (" + error + ")");
+                }
+            },
+        },
+        watch: {
+            spell_text() {
+                // console.log(this.spell);
+                var spell_text = this.spell_text.replace(/\s*/g, "").toLowerCase();
+                var question = question[this.index].question.replace(/\s*/g, "").toLowerCase();
+                if (spell_text == question) {
+                    this.spell_success = true;
+                }
+                else {
+                    this.spell_success = false;
+                }
+            },
+            index() {
+                this.index_history.push(this.index);
+                localStorage.setItem("index", this.index);
+                this.spell_text = "";
+                this.search_text = undefined;
+            },
+            collection() {
+                localStorage.setItem("collection", JSON.stringify(this.collection));
+                this.paste_collection_text = JSON.stringify(this.collection);
+            },
+            notes: {
+                handler() {
+                    // console.log(this.notes);
+                    localStorage.setItem("notes", JSON.stringify(this.notes));
+                    this.paste_note_text = JSON.stringify(this.notes);
+                }, deep: true
+            },
+            index_history() {
+                localStorage.setItem("index_history", JSON.stringify(this.index_history))
+            },
+            search_text() {
+                // console.log(this.search_text);
+                if (!this.search_text) return;
+                var index = this.search_text.indexOf(".");
+                if (index) {
+                    this.index = Number(this.search_text.substring(0, index)) - 1;
+                    // this.search_text = "";
+                    this.show_search = false;
+                }
+
+            },
+
+        },
+        mounted: function () {
+            var local_collection = localStorage.getItem("collection");
+            var local_history = localStorage.getItem("index_history");
+            var local_notes = localStorage.getItem("notes");
+            console.log("collection:", local_collection);
+            console.log("history:", local_history);
+            console.log("notes:", local_notes);
+            if (local_collection) this.collection = JSON.parse(local_collection)
+            if (local_history) this.index_history = JSON.parse(local_history)
+            if (local_notes) this.notes = JSON.parse(local_notes)
+
+            var local_index = localStorage.getItem("index");
+            // console.log(local_index);
+
+            var id = Number(this.GetQueryString("id"));
+            this.index = Math.max(0, this.GetQueryString("id") - 1) % question.length;
+
+            setTimeout(() => {
+                if (local_index > 0) {
+                    // var r = confirm("是否从第" + (Number(local_index) + 1) + "个题目" + question[Number(local_index)].question + "继续")
+                    // if (r == true) {
+                    // this.index = Number(local_index);
+                    this.last_question()
+                    // }
+                    // else {
+                    // }
+                }
+            }, 1000);
+
+            question.forEach((e, index) => {
+                var question = (index + 1) + ". [" + e.type + "] [" + e.question + "] "; // + " P"+ e.page
+                this.question_questions.push(question);
+                // this.question_questions_CN.push(e.question_CN);
+            });
+
+            // setInterval(() => {
+            //     console.log(this.notes);
+            //     console.log(localStorage.getItem("notes"));
+            // }, 3000)
+        },
+        created: function () {
+            var _this = this;
+            document.onkeydown = function (e) {
+                if (_this.show_spell || _this.show_search || _this.copy_collection_show || _this.copy_note_show || _this.show_note_edit) {
+                    return
+                }
+                let key = window.event.keyCode;
+                if (key == 37 || key == 38 || key == 65 || key == 87)
+                    _this.last_question();
+                if (key == 39 || key == 40 || key == 68 || key == 83)
+                    _this.next_question();
+                if (key == 32) {
+                    _this.collect_question();
+                }
+
+            };
+        },
+    });
+</script>
+
+<script>
+/*
+
+*/
+</script>
+
+</html>
